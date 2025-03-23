@@ -1,38 +1,86 @@
 <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <div class="flex items-center">
-          <a href="/" class="text-2xl font-semibold text-rose-600 hover:text-rose-800 navbar-link">Vestie</a>
-        </div>
-        <div class="hidden md:flex items-center space-x-8">
-          <a href="/" class="text-gray-700 hover:text-rose-600 navbar-link">Ana Sayfa</a>
-          <a href="/dresses" class="text-gray-700 hover:text-rose-600 navbar-link">Elbiseler</a>
-          <a href="/nasil_calisir" class="text-gray-700 hover:text-rose-600 navbar-link">Nasıl Çalışır</a>
-          <a href="/contact" class="text-gray-700 hover:text-rose-600 navbar-link">İletişim</a>
-        </div>
-        <div class="flex items-center space-x-4">
-          {% if session.user %}
-            <!-- Oturumda kullanıcı varsa profil ve çıkış -->
-            <a href="/profile" class="auth-btn px-3 py-1.5 text-sm border border-transparent bg-rose-500 text-white rounded hover:bg-rose-600 transition-colors">
-              Profilim
-            </a>
-            <a href="/logout" class="auth-btn px-3 py-1.5 text-sm border border-transparent bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors">
-              Çıkış Yap
-            </a>
-          {% else %}
-            <!-- Oturumda kullanıcı yoksa giriş ve kayıt -->
-            <a href="/login" class="auth-btn px-3 py-1.5 text-sm border border-red-500 bg-white text-red-500 rounded hover:bg-red-500 hover:text-white transition-colors">
-              Giriş Yap
-            </a>
-            <a href="/signup" class="auth-btn px-3 py-1.5 text-sm border border-white bg-rose-500 text-white rounded hover:bg-white hover:text-rose-500 transition-colors">
-              Kayıt Ol
-            </a>
-          {% endif %}
-          <button class="md:hidden p-2 hover:bg-gray-100 rounded-full">
-            <i data-lucide="menu" class="w-5 h-5 text-gray-600"></i>
-          </button>
-        </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Sol Tarafta Logo -->
+      <div class="flex items-center">
+        <a href="/" class="text-2xl font-semibold text-rose-600 hover:text-rose-800 navbar-link">
+          Vestie
+        </a>
+      </div>
+
+      <!-- Masaüstü Menü -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="/" class="text-gray-700 hover:text-rose-600 navbar-link">Ana Sayfa</a>
+        <a href="/dresses" class="text-gray-700 hover:text-rose-600 navbar-link">Elbiseler</a>
+        <a href="/nasil_calisir" class="text-gray-700 hover:text-rose-600 navbar-link">Nasıl Çalışır</a>
+        <a href="/contact" class="text-gray-700 hover:text-rose-600 navbar-link">İletişim</a>
+      </div>
+
+      <!-- Sağ Tarafta Butonlar (Giriş / Kayıt veya Profil / Çıkış) -->
+      <div class="hidden md:flex items-center space-x-4">
+        {% if session.user %}
+          <a href="/profile" class="auth-btn px-3 py-1.5 text-sm border border-transparent bg-rose-500 text-white rounded hover:bg-rose-600 transition-colors">
+            Profilim
+          </a>
+          <a href="/logout" class="auth-btn px-3 py-1.5 text-sm border border-transparent bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors">
+            Çıkış Yap
+          </a>
+        {% else %}
+          <a href="/login" class="auth-btn px-3 py-1.5 text-sm border border-red-500 bg-white text-red-500 rounded hover:bg-red-500 hover:text-white transition-colors">
+            Giriş Yap
+          </a>
+          <a href="/signup" class="auth-btn px-3 py-1.5 text-sm border border-white bg-rose-500 text-white rounded hover:bg-white hover:text-rose-500 transition-colors">
+            Kayıt Ol
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Mobilde Görünecek Hamburger -->
+      <div class="md:hidden flex items-center">
+        <button id="mobile-menu-button" class="p-2 hover:bg-gray-100 rounded-full">
+          <i data-lucide="menu" class="w-5 h-5 text-gray-600"></i>
+        </button>
       </div>
     </div>
-  </nav>
+  </div>
+
+  <!-- Mobil Menü (Başlangıçta gizli) -->
+  <div id="mobile-menu" class="md:hidden hidden bg-white shadow-md">
+    <div class="px-4 pt-2 pb-3 space-y-1">
+      <!-- Sayfa Linkleri -->
+      <a href="/" class="block text-gray-700 hover:text-rose-600 py-2">Ana Sayfa</a>
+      <a href="/dresses" class="block text-gray-700 hover:text-rose-600 py-2">Elbiseler</a>
+      <a href="/nasil_calisir" class="block text-gray-700 hover:text-rose-600 py-2">Nasıl Çalışır</a>
+      <a href="/contact" class="block text-gray-700 hover:text-rose-600 py-2">İletişim</a>
+      <div class="border-t border-gray-200 my-2"></div>
+      <!-- Giriş / Kayıt veya Profil / Çıkış -->
+      {% if session.user %}
+        <a href="/profile" class="block text-gray-700 hover:text-rose-600 py-2">Profilim</a>
+        <a href="/logout" class="block text-gray-700 hover:text-rose-600 py-2">Çıkış Yap</a>
+      {% else %}
+        <a href="/login" class="block text-gray-700 hover:text-rose-600 py-2">Giriş Yap</a>
+        <a href="/signup" class="block text-gray-700 hover:text-rose-600 py-2">Kayıt Ol</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- Scripts -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const menuButton = document.getElementById("mobile-menu-button");
+  const mobileMenu = document.getElementById("mobile-menu");
   
+  // Hamburger ikonuna tıklayınca menüyü göster/gizle
+  if (menuButton && mobileMenu) {
+    menuButton.addEventListener("click", function() {
+      // Tailwind classes: hidden / block
+      if (mobileMenu.classList.contains("hidden")) {
+        mobileMenu.classList.remove("hidden");
+      } else {
+        mobileMenu.classList.add("hidden");
+      }
+    });
+  }
+});
+</script>
