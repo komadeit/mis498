@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Giriş Yap - Vestie{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+  <div class="max-w-md w-full space-y-8">
+    <div>
+      <h2 class="text-center text-3xl font-extrabold text-gray-900">Giriş Yap</h2>
+    </div>
+    <form id="login-form" method="POST" action="/login" class="mt-8 space-y-6">
+      <!-- E-posta -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">E-posta</label>
+        <input id="email" name="email" type="email" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+               placeholder="E-posta adresiniz">
+      </div>
+      <!-- Şifre -->
+      <div class="relative">
+        <label for="password" class="block text-sm font-medium text-gray-700">Şifre</label>
+        <input id="password" name="password" type="password" required
+               class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+               placeholder="Şifreniz">
+        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center justify-center focus:outline-none">
+          <i id="password-icon" data-lucide="eye" class="h-5 w-5 text-gray-400"></i>
+        </button>
+      </div>
+      <!-- Giriş Butonu -->
+      <div>
+        <button type="submit"
+                class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+          Giriş Yap
+        </button>
+      </div>
+    </form>
+    <!-- Kayıt Ol Linki -->
+    <div class="text-center">
+      <p class="text-sm text-gray-600">
+        Hesabınız yok mu? <a href="/signup" class="font-medium text-rose-600 hover:text-rose-500">Kayıt Olun</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Hatalı Giriş Modalı (Flash mesajı varsa) -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div id="error-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded shadow-lg relative max-w-sm w-full">
+        <button id="close-error-modal" class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none">
+          <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+        </button>
+        <p class="text-center text-red-600 text-lg">{{ messages[0] }}</p>
+      </div>
+    </div>
+  {% endif %}
+{% endwith %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Şifre toggle işlevi
+  const passwordInput = document.getElementById("password");
+  const icon = document.getElementById("password-icon");
+  const toggleBtn = document.getElementById("toggle-password");
+
+  toggleBtn.addEventListener("click", function () {
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      icon.setAttribute("data-lucide", "eye-off");
+    } else {
+      passwordInput.type = "password";
+      icon.setAttribute("data-lucide", "eye");
+    }
+    lucide.createIcons();
+  });
+
+  // Modal kapatma işlevi
+  const closeModalBtn = document.getElementById("close-error-modal");
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", function() {
+      const errorModal = document.getElementById("error-modal");
+      if (errorModal) {
+        errorModal.style.display = "none";
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

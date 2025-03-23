@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Ana Sayfa - Vestie{% endblock %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative">
+  <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gray-100"></div>
+  <div class="relative shadow-xl sm:rounded-2xl sm:overflow-hidden">
+    <div class="absolute inset-0">
+      <img class="h-full w-full object-cover" src="https://images.unsplash.com/photo-1490707967831-1fd9b48e40e2?auto=format&fit=crop&q=80" alt="Vestie">
+      <div class="absolute inset-0 bg-rose-700 mix-blend-multiply"></div>
+    </div>
+    <div class="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
+      <h1 class="text-center text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+        <span class="block text-white">Özel Günleriniz İçin</span>
+        <span class="block text-rose-200">Kiralık Abiye Elbiseler</span>
+      </h1>
+      <p class="mt-6 max-w-lg mx-auto text-center text-xl text-white sm:max-w-3xl">
+        Yüzlerce tasarım arasından size en uygun abiyeyi seçin, kiralayın ve özel gününüzde göz kamaştırın.
+      </p>
+      <div class="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
+        <div class="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5">
+          <a href="/dresses" class="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-rose-700 bg-white hover:bg-rose-50 sm:px-8">
+            Hemen Keşfet
+          </a>
+          <a href="/nasil_calisir" class="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-rose-500 bg-opacity-60 hover:bg-opacity-70 sm:px-8">
+            Nasıl Çalışır?
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dress Catalog -->
+<section class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+  <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Popüler Elbiseler</h2>
+  <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+    {% for dress in dresses %}
+    <div class="group relative">
+      <div class="aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-200">
+        <img src="{{ dress.imageUrl }}" alt="{{ dress.name }}" class="h-full w-full object-cover object-center group-hover:opacity-75 transition-opacity">
+        <div class="absolute top-2 right-2">
+          {% if dress.available %}
+          <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">Müsait</span>
+          {% else %}
+          <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs">Kiralık</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="mt-4 flex justify-between">
+        <div>
+          <h3 class="text-sm text-gray-700">{{ dress.name }}</h3>
+          <p class="mt-1 text-sm text-gray-500">Beden: {{ dress.size }}</p>
+        </div>
+        <p class="text-sm font-medium text-gray-900">{{ dress.price }} ₺/gün</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Vestie{% endblock %}</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Animate.css CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    .navbar-link:hover {
+      color: #e11d48;
+      transition: color 0.5s ease-in-out;
+    }
+    .auth-btn:hover {
+      transform: scale(1.10);
+      transition: all 0.2s ease-in-out;
+    }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body class="bg-gray-50">
+  {% include 'navbar.html' %}
+  <div class="pt-16">
+    {% block content %}{% endblock %}
+  </div>
+  {% include 'footer.html' %}
+  <script>
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}Nasıl Çalışır - Vestie{% endblock %}
+{% block content %}
+
+<!-- Hero Bölümü -->
+<section class="relative pt-16">
+  <div class="absolute inset-0">
+    <img class="h-full w-full object-cover" 
+         src="https://images.unsplash.com/photo-1629904853716-f0bc54eea481?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA=="
+         alt="Nasıl Çalışır">
+    <!-- Dark Fog Overlay -->
+    <div class="absolute inset-0 bg-black opacity-70"></div>
+  </div>
+  <div class="relative px-4 py-32 sm:px-6 sm:py-40 lg:py-48 lg:px-8 text-center text-white">
+    <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+      <span class="block">Nasıl Çalışır?</span>
+    </h1>
+    <p class="mt-6 max-w-2xl mx-auto text-xl">
+      Vestie'de sürecimiz; elbisenin teslim alınmasından kalite kontrol, kuru temizleme, kullanım ve geri dönüş aşamalarını içerir.
+    </p>
+  </div>
+</section>
+
+<!-- Süreç Adımları -->
+<section class="relative bg-white py-16 sm:py-24 lg:py-32">
+  <div class="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
+    <!-- İlk Satır: Adım 1, 2, 3 -->
+    <div class="grid grid-cols-5 gap-4 items-center">
+      <!-- Adım 1 -->
+      <div class="relative group">
+        <div class="flex items-center justify-center">
+          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
+          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
+            <span class="text-white text-2xl font-bold">1</span>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Elbiseyi Teslim Alıyoruz</h3>
+          <p class="text-base text-gray-500 leading-relaxed">
+            Kiralayandan elbiseyi özenle alıyor, ilk kalite kontrolümüzü gerçekleştiriyoruz.
+          </p>
+        </div>
+      </div>
+      <!-- Ok 1: Sağbakan -->
+      <div class="flex justify-center">
+        <i data-lucide="arrow-right" class="w-8 h-8 text-rose-400 animate-pulse"></i>
+      </div>
+      <!-- Adım 2 -->
+      <div class="relative group">
+        <div class="flex items-center justify-center">
+          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
+          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
+            <span class="text-white text-2xl font-bold">2</span>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Kuru Temizlemeye Gönderiyoruz</h3>
+          <p class="text-base text-gray-500 leading-relaxed">
+            Profesyonel kuru temizleme merkezimize göndererek, elbiseyi temizlettiriyoruz.
+          </p>
+        </div>
+      </div>
+      <!-- Ok 2: Sağbakan -->
+      <div class="flex justify-center">
+        <i data-lucide="arrow-right" class="w-8 h-8 text-rose-400 animate-pulse"></i>
+      </div>
+      <!-- Adım 3 -->
+      <div class="relative group">
+        <div class="flex items-center justify-center">
+          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
+          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
+            <span class="text-white text-2xl font-bold">3</span>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Size Teslim Ediyoruz</h3>
+          <p class="text-base text-gray-500 leading-relaxed">
+            Temizlenen elbiseyi, kiralama yapmak üzere güvenle adresinize gönderiyoruz.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dikey Ok: 5 sütunlu grid, sağdaki sütuna hizalı -->
+    <div class="grid grid-cols-5">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div class="ml-3 my-2 flex justify-center">
+        <i data-lucide="arrow-down" class="w-8 h-8 text-rose-400 animate-pulse"></i>
+      </div>
+    </div>
+
+    <!-- İkinci Satır: Adım 4, 5, 6 -->
+    <div class="grid grid-cols-5 gap-4 items-center mt-8">
+      <!-- Adım 4 -->
+      <div class="relative group">
+        <div class="flex items-center justify-center">
+          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
+          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
+            <span class="text-white text-2xl font-bold">4</span>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Kullanım Sonrası Teslim</h3>
+          <p class="text-base text-gray-500 leading-relaxed">
+            Elbiseyi kullandıktan sonra, size gönderilen paketten çıkarıp bize geri gönderirsiniz.
+          </p>
+        </div>
+      </div>
+      <!-- Ok 3: Soldan bakan -->
+      <div class="flex justify-center">
+        <i data-lucide="arrow-left" class="w-8 h-8 text-rose-400 animate-pulse"></i>
+      </div>
+      <!-- Adım 5 -->
+      <div class="relative group">
+        <div class="flex items-center justify-center">
+          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
+          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
+            <span class="text-white text-2xl font-bold">5</span>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Tekrar Kalite Kontrol</h3>
+          <p class="text-base text-gray-500 leading-relaxed">
+            Geri gelen elbiseyi yeniden kalite kontrolünden geçiriyor, olası sorunları tespit ediyoruz.
+          </p>
+        </div>
+      </div>
+      <!-- Ok 4: Soldan bakan -->
+      <div class="flex justify-center">
+        <i data-lucide="arrow-left" class="w-8 h-8 text-rose-400 animate-pulse"></i>
+      </div>
+      <!-- Adım 6 -->
+      <div class="relative group">
+        <div class="flex items-center justify-center">
+          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
+          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
+            <span class="text-white text-2xl font-bold">6</span>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Kiralayana Geri Gönderiyoruz</h3>
+          <p class="text-base text-gray-500 leading-relaxed">
+            Son kontrolün ardından elbiseyi kiralayana güvenle geri gönderiyoruz.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Additional Info Section -->
+<section class="bg-rose-50">
+  <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h2 class="text-3xl font-extrabold text-rose-900 sm:text-4xl">Güvenli ve Kolay Kiralama</h2>
+      <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+        Her adımda sizin memnuniyetiniz için çalışıyoruz. Profesyonel ekibimiz ve güvenilir iş ortaklarımızla en iyi hizmeti sunmayı hedefliyoruz.
+      </p>
+      <div class="mt-8">
+        <a href="/dresses" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700">
+          Hemen Keşfet
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  if (typeof lucide !== "undefined") {
+    lucide.createIcons();
+  }
+</script>
+{% endblock %}

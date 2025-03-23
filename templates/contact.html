@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}İletişim - Vestie{% endblock %}
+{% block content %}
+<div class="container mx-auto py-12 px-4">
+  <!-- Grup Tanıtım Bölümü -->
+  <section class="mb-12">
+    <h2 class="text-3xl font-bold text-center mb-4">İletişim</h2>
+    <p class="text-center text-gray-700 mb-6">
+      İstanbul Bilgi Üniversitesi MIS Bölümü son sınıf öğrencileri olarak, MIS498 kodlu proje dersimiz için bu projeyi geliştiriyoruz.
+    </p>
+    <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6">
+      <div class="p-4 border rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold">Kaan Özcan</h3>
+      </div>
+      <div class="p-4 border rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold">Latife İrem Güllü</h3>
+      </div>
+      <div class="p-4 border rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold">Mert Sezen</h3>
+      </div>
+      <div class="p-4 border rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold">Okan Demirtaş</h3>
+      </div>
+      <div class="p-4 border rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold">Erdem Caner</h3>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Geribildirim Formu Bölümü -->
+  <section>
+    <h2 class="text-2xl font-bold mb-4">Geribildirim ve İletişim</h2>
+    <form id="contact-form" class="space-y-6">
+      <div>
+        <label for="contact-name" class="block text-sm font-medium text-gray-700">Ad Soyad</label>
+        <input type="text" id="contact-name" name="contact-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" placeholder="Adınız Soyadınız">
+      </div>
+      <div>
+        <label for="contact-email" class="block text-sm font-medium text-gray-700">E-posta</label>
+        <input type="email" id="contact-email" name="contact-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" placeholder="E-posta adresiniz">
+      </div>
+      <div>
+        <label for="contact-message" class="block text-sm font-medium text-gray-700">Mesajınız</label>
+        <textarea id="contact-message" name="contact-message" required rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" placeholder="Bize iletmek istediğiniz şeyi buraya yazın..."></textarea>
+      </div>
+      <div>
+        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+          Gönder
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<script>
+  // Contact form submit event
+  document.getElementById("contact-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    alert("Mesajınız alındı, en kısa zamanda geri dönüş sağlanacaktır :)");
+    this.reset();
+  });
+</script>
+{% endblock %}

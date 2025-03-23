@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Elbiseler - Vestie{% endblock %}
+{% block content %}
+
+<!-- Hero -->
+<div class="relative">
+  <div class="absolute inset-0">
+    <img class="h-full w-full object-cover" src="https://images.unsplash.com/photo-1490707967831-1fd9b48e40e2?auto=format&fit=crop&q=80" alt="Elbiseler">
+    <div class="absolute inset-0 bg-rose-900/60 mix-blend-multiply"></div>
+  </div>
+  <div class="relative px-4 py-32 sm:px-6 sm:py-40 lg:py-48 lg:px-8 text-center text-white">
+    <h1 class="text-4xl font-extrabold tracking-tight">Elbise Koleksiyonu</h1>
+    <p class="mt-6 max-w-2xl mx-auto text-xl">Özel günleriniz için en şık ve zarif elbiseler</p>
+  </div>
+</div>
+
+<!-- Katalog -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Tüm Elbiseler</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {% for dress in dresses %}
+      <a href="{{ url_for('dress_detail', id=dress.id) }}">
+        <div class="group relative border rounded-lg hover:shadow-xl transition-shadow">
+          <div class="aspect-[2/3] w-full overflow-hidden rounded-t-lg bg-gray-200">
+            <img src="{{ dress.imageUrl }}" alt="{{ dress.name }}" class="h-full w-full object-cover object-center group-hover:opacity-75 transition-opacity" />
+            <div class="absolute top-2 right-2">
+              {% if dress.available %}
+                <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">Müsait</span>
+              {% else %}
+                <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs">Kiralık</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-sm text-gray-700 font-semibold">{{ dress.name }}</h3>
+                <p class="mt-1 text-sm text-gray-500">Beden: {{ dress.size }}</p>
+              </div>
+              <p class="text-sm font-medium text-gray-900">{{ dress.price }} ₺/gün</p>
+            </div>
+            <p class="mt-2 text-sm text-gray-500">{{ dress.description }}</p>
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

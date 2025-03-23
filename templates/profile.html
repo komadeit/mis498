@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Profil - Vestie{% endblock %}
+{% block content %}
+<!-- Üstte Sol Ok ile Geri Dön Butonu -->
+<header class="bg-white shadow py-4 px-6 flex items-center">
+  <a href="/" class="flex items-center text-rose-600 hover:text-rose-800 focus:outline-none">
+    <i data-lucide="arrow-left" class="w-6 h-6 mr-2"></i>
+    <span class="font-semibold">Ana Sayfa</span>
+  </a>
+</header>
+
+<!-- Profil İçeriği -->
+<div class="max-w-4xl mx-auto py-12 px-4">
+  <h1 class="text-center text-3xl font-bold text-gray-900 mb-12">Profil</h1>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Şifremi Değiştir -->
+    <div class="bg-white rounded-lg shadow p-6 flex items-center space-x-4 hover:bg-rose-50 transition-colors">
+      <i data-lucide="key" class="w-10 h-10 text-rose-500"></i>
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">Şifremi Değiştir</h2>
+        <p class="text-gray-500">Güvenliğiniz için şifrenizi güncelleyin.</p>
+      </div>
+      <a href="/profile/change-password" class="ml-auto text-rose-600 hover:underline">Git</a>
+    </div>
+    <!-- Adreslerim -->
+    <div class="bg-white rounded-lg shadow p-6 flex items-center space-x-4 hover:bg-rose-50 transition-colors">
+      <i data-lucide="map-pin" class="w-10 h-10 text-rose-500"></i>
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">Adreslerim</h2>
+        <p class="text-gray-500">Kayıtlı adreslerinizi görüntüleyin veya güncelleyin.</p>
+      </div>
+      <a href="/profile/addresses" class="ml-auto text-rose-600 hover:underline">Git</a>
+    </div>
+    <!-- Ödeme Yöntemlerim -->
+    <div class="bg-white rounded-lg shadow p-6 flex items-center space-x-4 hover:bg-rose-50 transition-colors">
+      <i data-lucide="credit-card" class="w-10 h-10 text-rose-500"></i>
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">Ödeme Yöntemlerim</h2>
+        <p class="text-gray-500">Kayıtlı ödeme bilgilerinizi yönetin.</p>
+      </div>
+      <a href="/profile/payment-methods" class="ml-auto text-rose-600 hover:underline">Git</a>
+    </div>
+    <!-- Çıkış Yap -->
+    <div class="bg-white rounded-lg shadow p-6 flex items-center space-x-4 hover:bg-rose-50 transition-colors">
+      <i data-lucide="log-out" class="w-10 h-10 text-rose-500"></i>
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">Çıkış Yap</h2>
+        <p class="text-gray-500">Oturumunuzu sonlandırın.</p>
+      </div>
+      <a href="/logout" class="ml-auto text-rose-600 hover:underline">Git</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  if (typeof lucide !== "undefined") {
+    lucide.createIcons();
+  }
+</script>
+{% endblock %}
