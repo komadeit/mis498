@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-preline="true">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Vestie{% endblock %}</title>
+  
+  <!-- Preline CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/preline/dist/preline.css">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <!-- Animate.css CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  
   <style>
     .navbar-link:hover {
       color: #e11d48;
@@ -28,11 +32,25 @@
     {% block content %}{% endblock %}
   </div>
   {% include 'footer.html' %}
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  
+  <!-- Preline JS -->
+  <script src="https://unpkg.com/preline/dist/preline.js"></script>
+  
   <script>
+    // Lucide ikonları init
     if (typeof lucide !== 'undefined') {
       lucide.createIcons();
     }
+
+    // Preline manual init
+    document.addEventListener('DOMContentLoaded', function() {
+      window.HSStaticMethods.autoInit();
+    });
   </script>
+
   {% block scripts %}{% endblock %}
 </body>
 </html>

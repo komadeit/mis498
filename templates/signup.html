@@ -1,15 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Kayıt Ol - Vestie{% endblock %}
-{% block content %}
-<style>
-    /* Lucide ikonlarını içeren elementleri merkezlemek için */
-    i[data-lucide] {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  </style>
 
+{% block content %}
 <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-md w-full space-y-8">
     <div>
@@ -17,65 +9,91 @@
         Kayıt Ol
       </h2>
     </div>
-    <form id="auth-form" class="mt-8 space-y-6">
+    <form id="auth-form" method="POST" action="/signup" class="mt-8 space-y-6" data-hs-toggle-password-group>
       <!-- Ad Soyad -->
       <div>
         <label for="name" class="block text-sm font-medium text-gray-700">Ad Soyad</label>
-        <input id="name" name="name" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" placeholder="Ad Soyad">
+        <input id="name" name="name" type="text" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+               placeholder="Ad Soyad">
       </div>
       <!-- E-posta -->
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700">E-posta</label>
-        <input id="email" name="email" type="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" placeholder="E-posta">
+        <input id="email" name="email" type="email" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+               placeholder="E-posta">
       </div>
       <!-- Şifre -->
       <div class="relative">
         <label for="password" class="block text-sm font-medium text-gray-700">Şifre</label>
-        <input id="password" name="password" type="password" required 
-               class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" 
-               placeholder="Şifre">
-        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center justify-center focus:outline-none">
-          <i id="password-icon" data-lucide="eye" class="h-5 w-5 text-gray-400"></i>
-        </button>
+        <div class="relative">
+          <input id="password" name="password" type="password" required
+                 class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+                 placeholder="Şifre">
+          <button type="button"
+                  data-hs-toggle-password='{"target": ["#password", "#confirmPassword"], "defaultClass": "hs-password-active:block", "hiddenClass": "hs-password-active:hidden"}'
+                  class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-500">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path class="hs-password-active:hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path class="hs-password-active:hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              <path class="hidden hs-password-active:block" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M6.585 6.587L4 4m3.582 3.586L11 11m-1.293 1.707L8 16l-3-3 2.293-2.293"/>
+            </svg>
+          </button>
+        </div>
       </div>
-      
+      <!-- Şifre Tekrar -->
       <div class="relative">
         <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Şifre Tekrar</label>
-        <input id="confirmPassword" name="confirmPassword" type="password" required 
-               class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" 
-               placeholder="Şifre Tekrar">
-        <button type="button" id="toggle-confirm-password" class="absolute inset-y-0 right-0 pr-3 flex items-center justify-center focus:outline-none">
-          <i id="confirm-password-icon" data-lucide="eye" class="h-5 w-5 text-gray-400"></i>
-        </button>
-      </div>      
+        <div class="relative">
+          <input id="confirmPassword" name="confirmPassword" type="password" required
+                 class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+                 placeholder="Şifre Tekrar">
+          <button type="button"
+                  data-hs-toggle-password='{"target": ["#password", "#confirmPassword"], "defaultClass": "hs-password-active:block", "hiddenClass": "hs-password-active:hidden"}'
+                  class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-500">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path class="hs-password-active:hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path class="hs-password-active:hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              <path class="hidden hs-password-active:block" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M6.585 6.587L4 4m3.582 3.586L11 11m-1.293 1.707L8 16l-3-3 2.293-2.293"/>
+            </svg>
+          </button>
+        </div>
+      </div>
       <!-- İl (Şehir) -->
       <div>
         <label for="select-sehirler" class="block text-sm font-medium text-gray-700">İl</label>
-        <select id="select-sehirler" name="city" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
+        <select id="select-sehirler" name="city" required
+                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
           <option value="">Seçiniz</option>
         </select>
       </div>
       <!-- İlçe -->
       <div>
         <label for="select-ilceler" class="block text-sm font-medium text-gray-700">İlçe</label>
-        <select id="select-ilceler" name="district" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
+        <select id="select-ilceler" name="district" required
+                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
           <option value="">Lütfen önce il seçiniz</option>
         </select>
       </div>
       <!-- Mahalle -->
       <div>
         <label for="select-mahalleler" class="block text-sm font-medium text-gray-700">Mahalle</label>
-        <select id="select-mahalleler" name="neighborhood" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
+        <select id="select-mahalleler" name="neighborhood" required
+                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
           <option value="">Lütfen önce ilçe seçiniz</option>
         </select>
       </div>
       <!-- Açık Adres -->
       <div>
         <label for="address" class="block text-sm font-medium text-gray-700">Açık Adres</label>
-        <input id="address" name="address" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" placeholder="Sokak, cadde, vb.">
+        <input id="address" name="address" type="text" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+               placeholder="Sokak, cadde, vb.">
       </div>
       <div>
-        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+        <button type="submit"
+                class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
           Kayıt Ol
         </button>
       </div>
@@ -87,193 +105,199 @@
     </div>
   </div>
 </div>
+
+<!-- Modal: Signup Sonuç Mesajı -->
+<div id="signup-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 modal" style="display: none;">
+  <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full relative">
+    <button id="close-signup-modal" class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none">
+      <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+    </button>
+    <div id="modal-content" class="text-center">
+      <!-- Mesaj JS ile doldurulacak -->
+    </div>
+    <div id="modal-action" class="mt-4">
+      <!-- Buton JS ile doldurulacak -->
+    </div>
+  </div>
+</div>
 {% endblock %}
+
 {% block scripts %}
-
-<script>
-    // Şifre görünürlük kısmı
-    document.addEventListener("DOMContentLoaded", function() {
-      let passwordVisible = false;
-      
-      function togglePasswords() {
-        const passwordInput = document.getElementById("password");
-        const confirmPasswordInput = document.getElementById("confirmPassword");
-        const passwordIcon = document.getElementById("password-icon");
-        const confirmPasswordIcon = document.getElementById("confirm-password-icon");
-        
-        passwordVisible = !passwordVisible;
-        
-        if (passwordVisible) {
-          passwordInput.type = "text";
-          confirmPasswordInput.type = "text";
-          passwordIcon.setAttribute("data-lucide", "eye-off");
-          confirmPasswordIcon.setAttribute("data-lucide", "eye-off");
-        } else {
-          passwordInput.type = "password";
-          confirmPasswordInput.type = "password";
-          passwordIcon.setAttribute("data-lucide", "eye");
-          confirmPasswordIcon.setAttribute("data-lucide", "eye");
-        }
-        lucide.createIcons();
-      }
-      
-      document.getElementById("toggle-password").addEventListener("click", togglePasswords);
-      document.getElementById("toggle-confirm-password").addEventListener("click", togglePasswords);
-    });
-</script>
-
-<script>
-    // Şifreleri kontrol ettiğimiz kısım
-    document.addEventListener("DOMContentLoaded", function() {
-      const authForm = document.getElementById("auth-form");
-      authForm.addEventListener("submit", function(e) {
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
-        if (password !== confirmPassword) {
-          e.preventDefault();
-          alert("Şifreler uyuşmuyor. Lütfen şifrelerinizi kontrol edin.");
-        }
-      });
-    });
-</script>
-
-<script>
-    // Şehir, ilçe ve mahalle yüklediğimiz kısım
+<script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function() {
-  // Adres alanları için select elementleri
-  let objSehirler = document.querySelector("#select-sehirler");
-  let objIlceler = document.querySelector("#select-ilceler");
-  let objMahalleler = document.querySelector("#select-mahalleler");
-
-  // Şehirleri yükleyen fonksiyon
-  function fnSehirler() {
-    let adres = "/static/sehirler.json";
-    fetch(adres)
-      .then(response => response.json())
-      .then(data => {
-        while (objSehirler.options.length > 0) {
-          objSehirler.remove(0);
-        }
-        let option = document.createElement("option");
-        option.text = "Seçiniz";
-        option.value = "";
-        option.disabled = true;
-        option.selected = true;
-        objSehirler.add(option);
-        for (let i = 0; i < data.length; i++) {
-          option = document.createElement("option");
-          option.text = data[i].sehir_adi;
-          option.value = data[i].sehir_id;
-          objSehirler.add(option);
-        }
-      })
-      .catch(error => {
-        alert("Şehirlere ait JSON dosyası yüklenirken bir hata oluştu! " + error);
-      });
-  }
-
-  // İlçeleri yükleyen fonksiyon
-  function fnIlceler(sehirID) {
-    while (objIlceler.options.length > 0) {
-      objIlceler.remove(0);
-    }
-    let adres = "/static/ilceler.json";
-    fetch(adres)
-      .then(response => response.json())
-      .then(data => {
-        let option = document.createElement("option");
-        option.text = "Seçiniz";
-        option.value = "";
-        option.disabled = true;
-        option.selected = true;
-        objIlceler.add(option);
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].sehir_id === sehirID) {
-            option = document.createElement("option");
-            option.text = data[i].ilce_adi;
-            option.value = data[i].ilce_id;
-            objIlceler.add(option);
+  const toggleGroup = document.querySelector('[data-hs-toggle-password-group]');
+  if (toggleGroup) {
+    const toggleButtons = toggleGroup.querySelectorAll('[data-hs-toggle-password]');
+    toggleButtons.forEach(button => {
+      button.addEventListener("click", function() {
+        const config = JSON.parse(button.getAttribute("data-hs-toggle-password"));
+        if (!config.target || !config.target.length) return;
+        const firstInput = document.querySelector(config.target[0]);
+        if (!firstInput) return;
+        const newType = (firstInput.type === "password") ? "text" : "password";
+        config.target.forEach(selector => {
+          const input = document.querySelector(selector);
+          if (input) input.type = newType;
+        });
+        toggleButtons.forEach(btn => {
+          const svg = btn.querySelector("svg");
+          if (svg) {
+            const inactiveGroup = svg.querySelector("g.inactive-icon");
+            const activeGroup = svg.querySelector("g.active-icon");
+            if (newType === "text") {
+              if (activeGroup) activeGroup.classList.remove("hidden");
+              if (inactiveGroup) inactiveGroup.classList.add("hidden");
+            } else {
+              if (activeGroup) activeGroup.classList.add("hidden");
+              if (inactiveGroup) inactiveGroup.classList.remove("hidden");
+            }
           }
-        }
-      })
-      .catch(error => {
-        alert("İlçelere ait JSON dosyası yüklenirken bir hata oluştu! " + error);
+        });
       });
+    });
   }
 
-  // Mahalleleri yükleyen fonksiyon: 4 ayrı dosyadan
-  function fnMahalleler(ilceID) {
-    while (objMahalleler.options.length > 0) {
-      objMahalleler.remove(0);
+    // Şifre kontrolü
+    const authForm = document.getElementById("auth-form");
+    authForm.addEventListener("submit", function(e) {
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      if (password !== confirmPassword) {
+        e.preventDefault();
+        alert("Şifreler uyuşmuyor. Lütfen şifrelerinizi kontrol edin.");
+      }
+    });
+    
+    // Şehir, ilçe, mahalle yükleme (değer olarak isimleri alacak şekilde)
+    let objSehirler = document.querySelector("#select-sehirler");
+    let objIlceler = document.querySelector("#select-ilceler");
+    let objMahalleler = document.querySelector("#select-mahalleler");
+    
+    function fnSehirler() {
+      fetch("/static/sehirler.json")
+        .then(response => response.json())
+        .then(data => {
+          objSehirler.innerHTML = "";
+          let option = document.createElement("option");
+          option.text = "Seçiniz";
+          option.value = "";
+          option.disabled = true;
+          option.selected = true;
+          objSehirler.add(option);
+          for (let i = 0; i < data.length; i++) {
+            option = document.createElement("option");
+            option.text = data[i].sehir_adi;
+            option.value = data[i].sehir_adi;
+            objSehirler.add(option);
+          }
+        })
+        .catch(error => { alert("Şehirlere ait JSON dosyası yüklenirken bir hata oluştu! " + error); });
     }
-    if (!ilceID) {
+    
+    function fnIlceler(cityName) {
+      objIlceler.innerHTML = "";
+      fetch("/static/ilceler.json")
+        .then(response => response.json())
+        .then(data => {
+          let option = document.createElement("option");
+          option.text = "Seçiniz";
+          option.value = "";
+          option.disabled = true;
+          option.selected = true;
+          objIlceler.add(option);
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].sehir_adi === cityName) {
+              option = document.createElement("option");
+              option.text = data[i].ilce_adi;
+              option.value = data[i].ilce_adi;
+              objIlceler.add(option);
+            }
+          }
+        })
+        .catch(error => { alert("İlçelere ait JSON dosyası yüklenirken bir hata oluştu! " + error); });
+    }
+    
+    function fnMahalleler(districtName) {
+      objMahalleler.innerHTML = "";
+      if (!districtName) {
+        let option = document.createElement("option");
+        option.text = "Lütfen önce ilçe seçiniz";
+        option.value = "";
+        option.disabled = true;
+        option.selected = true;
+        objMahalleler.add(option);
+        return;
+      }
+      let files = [
+        "/static/mahalleler-1.json",
+        "/static/mahalleler-2.json",
+        "/static/mahalleler-3.json",
+        "/static/mahalleler-4.json"
+      ];
+      Promise.all(files.map(file => fetch(file).then(r => r.json()).catch(() => [])))
+        .then(results => {
+          let allNeighborhoods = results.flat();
+          let option = document.createElement("option");
+          option.text = "Seçiniz";
+          option.value = "";
+          option.disabled = true;
+          option.selected = true;
+          objMahalleler.add(option);
+          for (let i = 0; i < allNeighborhoods.length; i++) {
+            if (allNeighborhoods[i].ilce_adi === districtName) {
+              option = document.createElement("option");
+              option.text = allNeighborhoods[i].mahalle_adi;
+              option.value = allNeighborhoods[i].mahalle_adi;
+              objMahalleler.add(option);
+            }
+          }
+        })
+        .catch(error => { alert("Mahallelere ait JSON dosyası yüklenirken bir hata oluştu! " + error); });
+    }
+    
+    fnSehirler();
+    
+    objSehirler.addEventListener("change", function() {
+      let selectedCity = objSehirler.value;
+      fnIlceler(selectedCity);
+      objMahalleler.innerHTML = "";
       let option = document.createElement("option");
       option.text = "Lütfen önce ilçe seçiniz";
       option.value = "";
       option.disabled = true;
       option.selected = true;
       objMahalleler.add(option);
-      return;
-    }
-    let files = [
-      "/static/mahalleler-1.json",
-      "/static/mahalleler-2.json",
-      "/static/mahalleler-3.json",
-      "/static/mahalleler-4.json"
-    ];
-    Promise.all(files.map(file => fetch(file).then(r => r.json()).catch(() => [])))
-      .then(results => {
-        let allNeighborhoods = results.flat();
-        let option = document.createElement("option");
-        option.text = "Seçiniz";
-        option.value = "";
-        option.disabled = true;
-        option.selected = true;
-        objMahalleler.add(option);
-        for (let i = 0; i < allNeighborhoods.length; i++) {
-          if (allNeighborhoods[i].ilce_id === ilceID) {
-            option = document.createElement("option");
-            option.text = allNeighborhoods[i].mahalle_adi;
-            option.value = allNeighborhoods[i].mahalle_id;
-            objMahalleler.add(option);
-          }
-        }
-      })
-      .catch(error => {
-        alert("Mahallelere ait JSON dosyası yüklenirken bir hata oluştu! " + error);
+    });
+    
+    objIlceler.addEventListener("change", function() {
+      let selectedDistrict = objIlceler.value;
+      fnMahalleler(selectedDistrict);
+    });
+    
+    objIlceler.addEventListener("click", function() {
+      if (!objSehirler.value) {
+        alert("Lütfen önce il seçiniz!");
+      }
+    });
+    
+    // Flash modal yönetimi
+    var flashMessages = JSON.parse('{{ get_flashed_messages()|tojson|safe }}');
+    if (flashMessages && flashMessages.length > 0) {
+      var signupModal = document.getElementById("signup-modal");
+      var modalContent = document.getElementById("modal-content");
+      var modalAction = document.getElementById("modal-action");
+      if (flashMessages[0] === "Kayıt Başarılı") {
+        modalContent.innerHTML = '<p class="text-green-600 text-xl font-bold">Kayıt Başarılı!</p>';
+        modalAction.innerHTML = '<a href="/login" class="block text-center px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 transition-colors">Giriş Yap</a>';
+      } else if (flashMessages[0] === "Bu e-posta zaten kayıtlı!") {
+        modalContent.innerHTML = '<p class="text-red-600 text-xl font-bold">Bu e-posta zaten kayıtlı!</p>';
+        modalAction.innerHTML = '<a href="/login" class="block text-center px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 transition-colors">Giriş Yap</a>';
+      }
+      signupModal.style.display = "flex";
+      document.getElementById("close-signup-modal").addEventListener("click", function() {
+        signupModal.style.display = "none";
       });
-  }
-
-  // Sayfa yüklendiğinde şehirleri yükle
-  fnSehirler();
-
-  // Şehir seçildiğinde, ilçeleri yükle ve mahalle alanını sıfırla
-  objSehirler.addEventListener("change", function() {
-    let selectedCity = objSehirler.value;
-    fnIlceler(selectedCity);
-    while (objMahalleler.options.length > 0) {
-      objMahalleler.remove(0);
-    }
-    let option = document.createElement("option");
-    option.text = "Lütfen önce ilçe seçiniz";
-    option.value = "";
-    option.disabled = true;
-    option.selected = true;
-    objMahalleler.add(option);
-  });
-
-  // İlçe seçildiğinde mahalleleri yükle
-  objIlceler.addEventListener("change", function() {
-    let selectedDistrict = objIlceler.value;
-    fnMahalleler(selectedDistrict);
-  });
-
-  // İlçe alanına tıklandığında, eğer il seçilmediyse uyarı ver
-  objIlceler.addEventListener("click", function() {
-    if (!objSehirler.value) {
-      alert("Lütfen önce il seçiniz!");
     }
   });
-});
 </script>
 {% endblock %}

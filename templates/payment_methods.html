@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% block title %}Ödeme Yöntemlerim - Vestie{% endblock %}
+
+{% block content %}
+<header class="bg-white shadow py-4 px-6 flex items-center">
+  <a href="/profile" class="flex items-center text-rose-600 hover:text-rose-800 focus:outline-none">
+    <i data-lucide="arrow-left" class="w-6 h-6 mr-2"></i>
+    <span class="font-semibold">Profil</span>
+  </a>
+</header>
+
+<div class="max-w-4xl mx-auto py-12 px-4">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Ödeme Yöntemlerim</h1>
+    {% if payment_methods|length < 5 %}
+      <button id="openAddPaymentModal" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded focus:outline-none">
+        + Ödeme Yöntemi Ekle
+      </button>
+    {% endif %}
+  </div>
+  
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div id="payment-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded shadow-lg relative max-w-sm w-full">
+          <button id="closePaymentModal" class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none">
+            <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+          </button>
+          <p class="text-center text-lg {% if 'eklendi' in messages[0]|lower %}text-green-600{% else %}text-red-600{% endif %}">
+            {{ messages[0] }}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+  {% endwith %}
+  
+  <div class="space-y-4">
+    {% for pm in payment_methods %}
+      <div class="bg-white rounded-lg shadow p-4 flex items-center justify-between">
+        <div>
+          <p class="text-gray-800 font-semibold">
+            Kart: **** **** **** {{ pm.last_four }}
+          </p>
+          <p class="text-gray-600">Son Kullanma: {{ pm.expiry_date_display }} - CVV: ***</p>
+        </div>
+        {% if payment_methods|length > 1 %}
+          <form action="/profile/payment-methods/delete/{{ pm.id }}" method="POST">
+            <button type="submit" class="text-red-600 hover:text-red-800">Sil</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  
+  <!-- Yeni Ödeme Yöntemi Ekleme MODAL -->
+  <div id="addPaymentModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded shadow-lg relative max-w-sm w-full">
+      <button id="closeAddPaymentModal" class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none">
+        <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+      </button>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Yeni Ödeme Yöntemi Ekle</h2>
+      <form action="/profile/payment-methods" method="POST" class="space-y-4" id="new-payment-form">
+        <!-- Kredi Kartı Numarası -->
+        <div>
+          <label for="card_number" class="block text-sm font-medium text-gray-700">Kredi Kartı Numarası</label>
+          <!-- Görünür input: 4'erli gruplama -->
+          <input id="card_number" name="card_number" type="text" required
+                 pattern="^(?:\d{4}\s){3}\d{4}$" minlength="19" maxlength="19"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+                 placeholder="1234 5678 9012 3456">
+        </div>
+        <!-- Kartın Son Kullanma Tarihi -->
+        <div>
+          <label for="expiry_date" class="block text-sm font-medium text-gray-700">Son Kullanma Tarihi</label>
+          <input id="expiry_date" name="expiry_date" type="text" required
+                 pattern="^(0[1-9]|1[0-2])\/\d{4}$" minlength="7" maxlength="7"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+                 placeholder="MM/YYYY">
+        </div>
+        <!-- CVV -->
+        <div>
+          <label for="cvv" class="block text-sm font-medium text-gray-700">CVV</label>
+          <input id="cvv" name="cvv" type="text" required
+                 pattern="^\d{3}$" minlength="3" maxlength="3"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+                 placeholder="3 basamaklı CVV">
+        </div>
+        <div>
+          <button type="submit"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+            Ekle
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+  // Modal kontrolleri
+  const closePaymentModal = document.getElementById("closePaymentModal");
+  if (closePaymentModal) {
+    closePaymentModal.addEventListener("click", function() {
+      const modal = document.getElementById("payment-modal");
+      if (modal) { modal.style.display = "none"; }
+    });
+  }
+  const openAddPaymentModal = document.getElementById("openAddPaymentModal");
+  if (openAddPaymentModal) {
+    openAddPaymentModal.addEventListener("click", function() {
+      const addModal = document.getElementById("addPaymentModal");
+      if (addModal) { addModal.classList.remove("hidden"); }
+    });
+  }
+  const closeAddPaymentModal = document.getElementById("closeAddPaymentModal");
+  if (closeAddPaymentModal) {
+    closeAddPaymentModal.addEventListener("click", function() {
+      const addModal = document.getElementById("addPaymentModal");
+      if (addModal) { addModal.classList.add("hidden"); }
+    });
+  }
+  if (typeof lucide !== "undefined") {
+    lucide.createIcons();
+  }
+  
+  // Uyarı mesajı gösterme fonksiyonu (Tailwind temalı)
+  function showWarning(inputElement, message) {
+    let warning = document.createElement("span");
+    warning.className = "text-red-600 text-xs mt-1 input-warning";
+    warning.innerText = message;
+    inputElement.parentNode.appendChild(warning);
+    setTimeout(function() {
+      warning.remove();
+    }, 2000);
+  }
+  
+  // Kart numarası alanı: Sadece rakam girişi, 4'lü gruplama
+  const cardInput = document.getElementById("card_number");
+  if (cardInput) {
+    cardInput.addEventListener("keypress", function(e) {
+      if (!/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        showWarning(cardInput, "Sadece sayı girin");
+      }
+    });
+    cardInput.addEventListener("input", function(e) {
+      let value = e.target.value.replace(/\D/g, "");
+      let formatted = value.match(/.{1,4}/g);
+      if (formatted) {
+        e.target.value = formatted.join(" ");
+      } else {
+        e.target.value = "";
+      }
+    });
+  }
+  
+  // Son kullanma tarihi alanı: Sadece rakam, 2 basamak girildikten sonra otomatik "/" ekleme
+  const expiryInput = document.getElementById("expiry_date");
+  if (expiryInput) {
+    expiryInput.addEventListener("keypress", function(e) {
+      if (!/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        showWarning(expiryInput, "Sadece sayı girin");
+      }
+    });
+    expiryInput.addEventListener("input", function(e) {
+      let value = e.target.value.replace(/\D/g, "");
+      if (value.length > 2) {
+        value = value.slice(0,2) + "/" + value.slice(2,6);
+      }
+      e.target.value = value;
+    });
+  }
+  
+  // CVV alanı: Sadece rakam
+  const cvvInput = document.getElementById("cvv");
+  if (cvvInput) {
+    cvvInput.addEventListener("keypress", function(e) {
+      if (!/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        showWarning(cvvInput, "Sadece sayı girin");
+      }
+    });
+  }
+  
+  // Form submit öncesinde, görünür alanların değerlerini değiştirmeden,
+  // temizlenmiş verileri gizli inputlara kopyalıyoruz ve görünür alanlardan name attribute'unu kaldırıyoruz.
+  const newPaymentForm = document.getElementById("new-payment-form");
+  if (newPaymentForm) {
+    newPaymentForm.addEventListener("submit", function(e) {
+      // Kart numarası
+      const cardInput = document.getElementById("card_number");
+      let cardValue = cardInput.value.replace(/\s+/g, "");
+      let hiddenCard = document.getElementById("hidden_card_number");
+      if (!hiddenCard) {
+        hiddenCard = document.createElement("input");
+        hiddenCard.type = "hidden";
+        hiddenCard.id = "hidden_card_number";
+        hiddenCard.name = "card_number";
+        newPaymentForm.appendChild(hiddenCard);
+      }
+      hiddenCard.value = cardValue;
+      cardInput.removeAttribute("name");
+      
+      // Son kullanma tarihi: hem temizlenmiş hem de görünür değeri ayrı hidden inputlara kopyalıyoruz.
+      const expiryInput = document.getElementById("expiry_date");
+      let expiryValue = expiryInput.value.replace(/\//g, ""); // örn: "122025"
+      let hiddenExpiry = document.getElementById("hidden_expiry_date");
+      if (!hiddenExpiry) {
+        hiddenExpiry = document.createElement("input");
+        hiddenExpiry.type = "hidden";
+        hiddenExpiry.id = "hidden_expiry_date";
+        hiddenExpiry.name = "expiry_date";
+        newPaymentForm.appendChild(hiddenExpiry);
+      }
+      hiddenExpiry.value = expiryValue;
+      
+      let hiddenExpiryDisplay = document.getElementById("hidden_expiry_date_display");
+      if (!hiddenExpiryDisplay) {
+        hiddenExpiryDisplay = document.createElement("input");
+        hiddenExpiryDisplay.type = "hidden";
+        hiddenExpiryDisplay.id = "hidden_expiry_date_display";
+        hiddenExpiryDisplay.name = "expiry_date_display";
+        newPaymentForm.appendChild(hiddenExpiryDisplay);
+      }
+      hiddenExpiryDisplay.value = expiryInput.value; // "MM/YYYY" format
+      
+      expiryInput.removeAttribute("name");
+    });
+  }
+});
+</script>
+{% endblock %}

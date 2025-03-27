@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Sayfa Bulunamadı - Vestie{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="text-center">
+    <h1 class="text-9xl font-extrabold text-rose-600">404</h1>
+    <h2 class="mt-4 text-4xl font-bold text-gray-900">Üzgünüz, Sayfa Bulunamadı</h2>
+    <p class="mt-5 text-lg text-gray-600">
+      Aradığınız sayfa bulunamadı. Yanlış bir URL girmiş olabilirsiniz ya da sayfa kaldırılmış olabilir.
+    </p>
+    <div class="mt-10">
+      <a href="/" class="px-6 py-3 text-lg font-medium text-white bg-rose-600 rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+        Ana Sayfaya Dön
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

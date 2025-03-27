@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% block title %}Adreslerim - Vestie{% endblock %}
+
+{% block content %}
+<header class="bg-white shadow py-4 px-6 flex items-center">
+  <a href="/profile" class="flex items-center text-rose-600 hover:text-rose-800 focus:outline-none">
+    <i data-lucide="arrow-left" class="w-6 h-6 mr-2"></i>
+    <span class="font-semibold">Profil</span>
+  </a>
+</header>
+
+<div class="max-w-4xl mx-auto py-12 px-4">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Adreslerim</h1>
+    <!-- + Butonu -->
+    {% if addresses|length < 5 %}
+      <button id="openAddAddressModal" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded focus:outline-none">
+        + Adres Ekle
+      </button>
+    {% endif %}
+  </div>
+  
+  <!-- Flash Mesaj Modalı -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div id="address-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded shadow-lg relative max-w-sm w-full">
+          <button id="close-address-modal" class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none">
+            <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+          </button>
+          <p class="text-center text-lg {% if 'başarılı' in messages[0]|lower %}text-green-600{% else %}text-red-600{% endif %}">
+            {{ messages[0] }}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+  {% endwith %}
+  
+  <!-- Kullanıcının adres listesini görüntüleme -->
+  <div class="space-y-4">
+    {% for addr in addresses %}
+      <div class="bg-white rounded-lg shadow p-4 flex items-center justify-between">
+        <div>
+          <p class="text-gray-800 font-semibold">{{ addr.city }}, {{ addr.district }}, {{ addr.neighborhood }}</p>
+          <p class="text-gray-600">{{ addr.address }}</p>
+        </div>
+        {% if addresses|length > 1 %}
+          <form action="/profile/addresses/delete/{{ addr.id }}" method="POST">
+            <button type="submit" class="text-red-600 hover:text-red-800">Sil</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  
+  <!-- Yeni adres ekleme MODAL -->
+  <div id="addAddressModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded shadow-lg relative max-w-sm w-full">
+      <button id="closeAddAddressModal" class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none">
+        <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+      </button>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Yeni Adres Ekle</h2>
+      <form action="/profile/addresses" method="POST" class="space-y-4" id="new-address-form">
+        <!-- İl (Şehir) -->
+        <div>
+          <label for="new-city" class="block text-sm font-medium text-gray-700">İl</label>
+          <select id="new-city" name="city" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
+            <option value="">Seçiniz</option>
+          </select>
+        </div>
+        <!-- İlçe -->
+        <div>
+          <label for="new-district" class="block text-sm font-medium text-gray-700">İlçe</label>
+          <select id="new-district" name="district" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
+            <option value="">Lütfen önce il seçiniz</option>
+          </select>
+        </div>
+        <!-- Mahalle -->
+        <div>
+          <label for="new-neighborhood" class="block text-sm font-medium text-gray-700">Mahalle</label>
+          <select id="new-neighborhood" name="neighborhood" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
+            <option value="">Lütfen önce ilçe seçiniz</option>
+          </select>
+        </div>
+        <!-- Açık Adres -->
+        <div>
+          <label for="new-address" class="block text-sm font-medium text-gray-700">Açık Adres</label>
+          <input id="new-address" name="address" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" placeholder="Sokak, cadde, vb.">
+        </div>
+        <div>
+          <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+            Ekle
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+  // Flash mesaj modal kapatma
+  const closeAddressModal = document.getElementById("close-address-modal");
+  if (closeAddressModal) {
+    closeAddressModal.addEventListener("click", function() {
+      const modal = document.getElementById("address-modal");
+      if (modal) { modal.style.display = "none"; }
+    });
+  }
+
+  // + Butonuna basınca "Yeni Adres Ekle" Modalını açma
+  const openAddAddressModal = document.getElementById("openAddAddressModal");
+  if (openAddAddressModal) {
+    openAddAddressModal.addEventListener("click", function() {
+      const addModal = document.getElementById("addAddressModal");
+      if (addModal) { addModal.classList.remove("hidden"); }
+    });
+  }
+
+  // Modal X (kapat) butonu
+  const closeAddAddressModal = document.getElementById("closeAddAddressModal");
+  if (closeAddAddressModal) {
+    closeAddAddressModal.addEventListener("click", function() {
+      const addModal = document.getElementById("addAddressModal");
+      if (addModal) { addModal.classList.add("hidden"); }
+    });
+  }
+
+  // Dinamik şehir/ilçe/mahalle yükleme
+  function loadNewCityOptions() {
+    fetch("/static/sehirler.json")
+      .then(response => response.json())
+      .then(data => {
+        const newCitySelect = document.getElementById("new-city");
+        if(!newCitySelect) return;
+        newCitySelect.innerHTML = "";
+        let option = document.createElement("option");
+        option.text = "Seçiniz";
+        option.value = "";
+        option.disabled = true;
+        option.selected = true;
+        newCitySelect.add(option);
+        data.forEach(item => {
+          let opt = document.createElement("option");
+          opt.text = item.sehir_adi;
+          opt.value = item.sehir_adi;
+          newCitySelect.add(opt);
+        });
+      })
+      .catch(error => alert("Şehir seçenekleri yüklenirken hata: " + error));
+  }
+  
+  function loadNewDistrictOptions(cityName) {
+    const newDistrictSelect = document.getElementById("new-district");
+    if(!newDistrictSelect) return;
+    newDistrictSelect.innerHTML = "";
+    fetch("/static/ilceler.json")
+      .then(response => response.json())
+      .then(data => {
+        let option = document.createElement("option");
+        option.text = "Seçiniz";
+        option.value = "";
+        option.disabled = true;
+        option.selected = true;
+        newDistrictSelect.add(option);
+        data.forEach(item => {
+          if (item.sehir_adi === cityName) {
+            let opt = document.createElement("option");
+            opt.text = item.ilce_adi;
+            opt.value = item.ilce_adi;
+            newDistrictSelect.add(opt);
+          }
+        });
+      })
+      .catch(error => alert("İlçe seçenekleri yüklenirken hata: " + error));
+  }
+  
+  function loadNewNeighborhoodOptions(districtName) {
+    const newNeighborhoodSelect = document.getElementById("new-neighborhood");
+    if(!newNeighborhoodSelect) return;
+    newNeighborhoodSelect.innerHTML = "";
+    if (!districtName) {
+      let option = document.createElement("option");
+      option.text = "Lütfen önce ilçe seçiniz";
+      option.value = "";
+      option.disabled = true;
+      option.selected = true;
+      newNeighborhoodSelect.add(option);
+      return;
+    }
+    let files = [
+      "/static/mahalleler-1.json",
+      "/static/mahalleler-2.json",
+      "/static/mahalleler-3.json",
+      "/static/mahalleler-4.json"
+    ];
+    Promise.all(files.map(file => fetch(file).then(r => r.json()).catch(() => [])))
+      .then(results => {
+        const allNeighborhoods = results.flat();
+        let option = document.createElement("option");
+        option.text = "Seçiniz";
+        option.value = "";
+        option.disabled = true;
+        option.selected = true;
+        newNeighborhoodSelect.add(option);
+        allNeighborhoods.forEach(item => {
+          if (item.ilce_adi === districtName) {
+            let opt = document.createElement("option");
+            opt.text = item.mahalle_adi;
+            opt.value = item.mahalle_adi;
+            newNeighborhoodSelect.add(opt);
+          }
+        });
+      })
+      .catch(error => alert("Mahalle seçenekleri yüklenirken hata: " + error));
+  }
+
+  loadNewCityOptions();
+  
+  const newCitySelect = document.getElementById("new-city");
+  if(newCitySelect) {
+    newCitySelect.addEventListener("change", function() {
+      let selectedCity = this.value;
+      loadNewDistrictOptions(selectedCity);
+      const newNeighborhoodSelect = document.getElementById("new-neighborhood");
+      newNeighborhoodSelect.innerHTML = "";
+      let option = document.createElement("option");
+      option.text = "Lütfen önce ilçe seçiniz";
+      option.value = "";
+      option.disabled = true;
+      option.selected = true;
+      newNeighborhoodSelect.add(option);
+    });
+  }
+
+  const newDistrictSelect = document.getElementById("new-district");
+  if(newDistrictSelect) {
+    newDistrictSelect.addEventListener("change", function() {
+      let selectedDistrict = this.value;
+      loadNewNeighborhoodOptions(selectedDistrict);
+    });
+  }
+
+  if (typeof lucide !== "undefined") {
+    lucide.createIcons();
+  }
+});
+</script>
+{% endblock %}

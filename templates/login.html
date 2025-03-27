@@ -15,16 +15,27 @@
                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
                placeholder="E-posta adresiniz">
       </div>
+      
       <!-- Şifre -->
-      <div class="relative">
+      <div>
         <label for="password" class="block text-sm font-medium text-gray-700">Şifre</label>
-        <input id="password" name="password" type="password" required
-               class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
-               placeholder="Şifreniz">
-        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center justify-center focus:outline-none">
-          <i id="password-icon" data-lucide="eye" class="h-5 w-5 text-gray-400"></i>
-        </button>
+        <div class="relative">
+          <input id="password" name="password" type="password" required
+                 class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+                 placeholder="Şifreniz">
+          <button type="button"
+                  data-hs-toggle-password='{"target": "#password"}'
+                  class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-500">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path class="hs-password-active:hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path class="hs-password-active:hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              <path class="hidden hs-password-active:block" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+              <circle class="hidden hs-password-active:block" cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
       </div>
+
       <!-- Giriş Butonu -->
       <div>
         <button type="submit"
@@ -33,6 +44,7 @@
         </button>
       </div>
     </form>
+    
     <!-- Kayıt Ol Linki -->
     <div class="text-center">
       <p class="text-sm text-gray-600">
@@ -42,48 +54,57 @@
   </div>
 </div>
 
-<!-- Hatalı Giriş Modalı (Flash mesajı varsa) -->
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div id="error-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div class="bg-white p-6 rounded shadow-lg relative max-w-sm w-full">
-        <button id="close-error-modal" class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none">
-          <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
-        </button>
-        <p class="text-center text-red-600 text-lg">{{ messages[0] }}</p>
-      </div>
+<!-- Flash Modal (Başarılı veya Hatalı Giriş) -->
+<div id="error-modal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white p-6 rounded shadow-lg relative max-w-sm w-full">
+    {% if get_flashed_messages()[0] == "Giriş başarılı!" %}
+      <button type="button" class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none cursor-not-allowed" disabled>
+        <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+      </button>
+    {% else %}
+      <button type="button" 
+              data-hs-toggle-modal="#error-modal"
+              class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none">
+        <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+      </button>
+    {% endif %}
+    <div class="text-center">
+      <p id="modal-message" class="text-lg">
+        {{ get_flashed_messages()[0] if get_flashed_messages() }}
+      </p>
     </div>
-  {% endif %}
-{% endwith %}
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  // Şifre toggle işlevi
-  const passwordInput = document.getElementById("password");
-  const icon = document.getElementById("password-icon");
-  const toggleBtn = document.getElementById("toggle-password");
+document.addEventListener("DOMContentLoaded", function() {
+  // Preline toggle initialize
+  HSStaticMethods.autoInit();
 
-  toggleBtn.addEventListener("click", function () {
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      icon.setAttribute("data-lucide", "eye-off");
-    } else {
-      passwordInput.type = "password";
-      icon.setAttribute("data-lucide", "eye");
+  // Flash Modal kontrolü
+  const messages = JSON.parse('{{ get_flashed_messages() | tojson | safe }}');
+  const errorModal = document.getElementById('error-modal');
+  const modalMessage = document.getElementById("modal-message");
+
+  if (messages.length > 0) {
+    errorModal.classList.remove('hidden');
+    // Eğer mesaj "Giriş başarılı!" ise modal kapatma butonu devre dışı bırakıldı
+    if (messages[0] === "Giriş başarılı!") {
+      modalMessage.classList.remove("text-red-600");
+      modalMessage.classList.add("text-green-600");
+      setTimeout(function() {
+        window.location.href = "/";
+      }, 2000);
     }
-    lucide.createIcons();
-  });
+  }
 
-  // Modal kapatma işlevi
-  const closeModalBtn = document.getElementById("close-error-modal");
-  if (closeModalBtn) {
-    closeModalBtn.addEventListener("click", function() {
-      const errorModal = document.getElementById("error-modal");
-      if (errorModal) {
-        errorModal.style.display = "none";
-      }
+  // Sadece hata durumunda modal kapatma butonunu aktif ediyoruz.
+  const toggleModalBtn = document.querySelector('[data-hs-toggle-modal="#error-modal"]');
+  if (toggleModalBtn) {
+    toggleModalBtn.addEventListener('click', function() {
+      errorModal.classList.add('hidden');
     });
   }
 });
