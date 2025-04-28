@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block title %}Kullanıcı Yönetimi – Admin{% endblock %}
+
+{% block head %}
+<link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header Section -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Kullanıcı Yönetimi</h1>
+      <p class="mt-2 text-gray-600">Sistemdeki tüm kullanıcıları görüntüleyin ve yönetin</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 bg-rose-100 rounded-full p-3">
+            <i data-lucide="users" class="w-6 h-6 text-rose-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Toplam Kullanıcı</p>
+            <h3 class="text-xl font-semibold text-gray-900">{{ users|length }}</h3>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 bg-blue-100 rounded-full p-3">
+            <i data-lucide="shopping-bag" class="w-6 h-6 text-blue-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Toplam İlan</p>
+            <h3 class="text-xl font-semibold text-gray-900">
+              {{ users|map(attribute='user_dresses')|map('length')|sum }}
+            </h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 bg-green-100 rounded-full p-3">
+            <i data-lucide="map-pin" class="w-6 h-6 text-green-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Kayıtlı Adres</p>
+            <h3 class="text-xl font-semibold text-gray-900">
+              {{ users|map(attribute='addresses')|map('length')|sum }}
+            </h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 bg-purple-100 rounded-full p-3">
+            <i data-lucide="credit-card" class="w-6 h-6 text-purple-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Ödeme Yöntemi</p>
+            <h3 class="text-xl font-semibold text-gray-900">
+              {{ users|map(attribute='payment_methods')|map('length')|sum }}
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="p-6">
+        <table id="users-table" class="w-full">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Kullanıcı</th>
+              <th>İlanlar</th>
+              <th>Adresler</th>
+              <th>Ödeme</th>
+              <th>İşlem</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in users %}
+            <tr class="border-b border-gray-200 hover:bg-gray-50">
+              <td>{{ u.customer_id }}</td>
+              <td>
+                <div class="flex items-center space-x-3">
+                  <img src="{{ u.profile_pic_url }}" alt="Profil" 
+                       class="h-10 w-10 rounded-full object-cover ring-2 ring-gray-100">
+                  <div>
+                    <div class="font-medium text-gray-900">{{ u.firstname }} {{ u.lastname }}</div>
+                    <div class="text-sm text-gray-500">{{ u.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="space-y-1">
+                  <div class="text-sm font-medium text-gray-900">{{ u.user_dresses|length }} İlan</div>
+                  {% for d in u.user_dresses[:2] %}
+                    <div class="text-sm text-gray-500 truncate">{{ d.name }}</div>
+                  {% endfor %}
+                  {% if u.user_dresses|length > 2 %}
+                    <div class="text-xs text-gray-400">+{{ u.user_dresses|length - 2 }} daha</div>
+                  {% endif %}
+                </div>
+              </td>
+              <td>
+                <div class="space-y-1">
+                  <div class="text-sm font-medium text-gray-900">{{ u.addresses|length }} Adres</div>
+                  {% for a in u.addresses[:2] %}
+                    <div class="text-sm text-gray-500 truncate">
+                      {{ a.city }}, {{ a.district }}
+                    </div>
+                  {% endfor %}
+                  {% if u.addresses|length > 2 %}
+                    <div class="text-xs text-gray-400">+{{ u.addresses|length - 2 }} daha</div>
+                  {% endif %}
+                </div>
+              </td>
+              <td>
+                <div class="space-y-1">
+                  <div class="text-sm font-medium text-gray-900">{{ u.payment_methods|length }} Kart</div>
+                  {% for pm in u.payment_methods %}
+                    <div class="text-sm text-gray-500">•••• {{ pm.last_four }}</div>
+                  {% endfor %}
+                </div>
+              </td>
+              <td>
+                <div class="flex space-x-2">
+                  <button onclick="showUserDetails('{{ u.customer_id }}')"
+                          class="text-blue-600 hover:text-blue-800 transition-colors">
+                    <i data-lucide="eye" class="w-5 h-5"></i>
+                  </button>
+                  <form method="POST" class="inline">
+                    <input type="hidden" name="user_id" value="{{ u.customer_id }}">
+                    <button type="button"
+                            onclick="confirmDelete('{{ u.customer_id }}', '{{ u.firstname }} {{ u.lastname }}')"
+                            class="text-red-600 hover:text-red-800 transition-colors">
+                      <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+  <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+  <div class="relative bg-white rounded-xl shadow-xl p-6 max-w-sm w-full mx-4">
+    <div class="text-center">
+      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+        <i data-lucide="alert-triangle" class="h-6 w-6 text-red-600"></i>
+      </div>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Kullanıcıyı Silmek İstediğinize Emin Misiniz?</h3>
+      <p id="delete-user-name" class="text-sm text-gray-500 mb-6"></p>
+      <div class="flex justify-center space-x-3">
+        <button onclick="hideDeleteModal()" 
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+          İptal
+        </button>
+        <form id="delete-form" method="POST" class="inline">
+          <input type="hidden" name="user_id" id="delete-user-id">
+          <button type="submit" 
+                  class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors">
+            Evet, Sil
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize Lucide icons
+  lucide.createIcons();
+  
+  // Initialize DataTable
+  $('#users-table').DataTable({
+    responsive: true,
+    pageLength: 25,
+    lengthMenu: [10, 25, 50, 100],
+    language: {
+      url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/tr.json'
+    },
+    columnDefs: [
+      { orderable: false, targets: [1, 2, 3, 4, 5] },
+      { className: 'dt-body-center', targets: [0, 5] }
+    ]
+  });
+});
+
+function confirmDelete(userId, userName) {
+  const modal = document.getElementById('delete-modal');
+  document.getElementById('delete-user-id').value = userId;
+  document.getElementById('delete-user-name').textContent = `${userName} isimli kullanıcı ve tüm verileri silinecektir.`;
+  modal.classList.remove('hidden');
+}
+
+function hideDeleteModal() {
+  document.getElementById('delete-modal').classList.add('hidden');
+}
+
+// Close modal on outside click
+document.getElementById('delete-modal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    hideDeleteModal();
+  }
+});
+
+// Close modal on ESC key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    hideDeleteModal();
+  }
+});
+</script>
+
+<style>
+/* DataTables Custom Styling */
+.dataTables_wrapper .dataTables_length select {
+  @apply rounded-lg border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+  @apply rounded-lg border-gray-300 shadow-sm focus:border-rose-500 focus:ring-rose-500;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  @apply bg-rose-600 text-white border-rose-600 hover:bg-rose-700 hover:border-rose-700;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:not(.current) {
+  @apply text-gray-700 hover:bg-gray-100 hover:border-gray-200;
+}
+</style>
+{% endblock %}

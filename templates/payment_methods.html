@@ -99,138 +99,192 @@
 
 {% block scripts %}
 <script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function() {
-  // Modal kontrolleri
-  const closePaymentModal = document.getElementById("closePaymentModal");
-  if (closePaymentModal) {
-    closePaymentModal.addEventListener("click", function() {
-      const modal = document.getElementById("payment-modal");
-      if (modal) { modal.style.display = "none"; }
-    });
-  }
-  const openAddPaymentModal = document.getElementById("openAddPaymentModal");
-  if (openAddPaymentModal) {
-    openAddPaymentModal.addEventListener("click", function() {
-      const addModal = document.getElementById("addPaymentModal");
-      if (addModal) { addModal.classList.remove("hidden"); }
-    });
-  }
-  const closeAddPaymentModal = document.getElementById("closeAddPaymentModal");
-  if (closeAddPaymentModal) {
-    closeAddPaymentModal.addEventListener("click", function() {
-      const addModal = document.getElementById("addPaymentModal");
-      if (addModal) { addModal.classList.add("hidden"); }
-    });
-  }
-  if (typeof lucide !== "undefined") {
-    lucide.createIcons();
-  }
-  
-  // Uyarı mesajı gösterme fonksiyonu (Tailwind temalı)
-  function showWarning(inputElement, message) {
-    let warning = document.createElement("span");
-    warning.className = "text-red-600 text-xs mt-1 input-warning";
-    warning.innerText = message;
-    inputElement.parentNode.appendChild(warning);
-    setTimeout(function() {
-      warning.remove();
-    }, 2000);
-  }
-  
-  // Kart numarası alanı: Sadece rakam girişi, 4'lü gruplama
-  const cardInput = document.getElementById("card_number");
-  if (cardInput) {
-    cardInput.addEventListener("keypress", function(e) {
-      if (!/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        e.preventDefault();
-        showWarning(cardInput, "Sadece sayı girin");
-      }
-    });
-    cardInput.addEventListener("input", function(e) {
-      let value = e.target.value.replace(/\D/g, "");
-      let formatted = value.match(/.{1,4}/g);
-      if (formatted) {
-        e.target.value = formatted.join(" ");
+  document.addEventListener("DOMContentLoaded", function() {
+    // Modal kontrolleri
+    const closePaymentModal = document.getElementById("closePaymentModal");
+    if (closePaymentModal) {
+      closePaymentModal.addEventListener("click", function() {
+        const modal = document.getElementById("payment-modal");
+        if (modal) { modal.style.display = "none"; }
+      });
+    }
+    const openAddPaymentModal = document.getElementById("openAddPaymentModal");
+    if (openAddPaymentModal) {
+      openAddPaymentModal.addEventListener("click", function() {
+        const addModal = document.getElementById("addPaymentModal");
+        if (addModal) { addModal.classList.remove("hidden"); }
+      });
+    }
+    const closeAddPaymentModal = document.getElementById("closeAddPaymentModal");
+    if (closeAddPaymentModal) {
+      closeAddPaymentModal.addEventListener("click", function() {
+        const addModal = document.getElementById("addPaymentModal");
+        if (addModal) { addModal.classList.add("hidden"); }
+      });
+    }
+    if (typeof lucide !== "undefined") {
+      lucide.createIcons();
+    }
+    
+    // Uyarı mesajı gösterme fonksiyonu.
+    // persistent true ise mesaj otomatik silinmez; mesajı eklerken "persistent" sınıfı verilir.
+    function showWarning(inputElement, message, persistent = false) {
+      let existingWarning = inputElement.parentNode.querySelector(".input-warning");
+      if (existingWarning) {
+        // Eğer persistent isteniyorsa, mesajı güncelle
+        if (persistent) {
+          existingWarning.innerText = message;
+          existingWarning.classList.add("persistent");
+          existingWarning.dataset.persistent = "true";
+        }
       } else {
-        e.target.value = "";
+        let warning = document.createElement("span");
+        warning.className = "text-red-600 text-xs mt-1 input-warning";
+        if (persistent) {
+          warning.classList.add("persistent");
+          warning.dataset.persistent = "true";
+        }
+        warning.innerText = message;
+        inputElement.parentNode.appendChild(warning);
+        if (!persistent) {
+          setTimeout(function() {
+            warning.remove();
+          }, 2000);
+        }
       }
-    });
-  }
-  
-  // Son kullanma tarihi alanı: Sadece rakam, 2 basamak girildikten sonra otomatik "/" ekleme
-  const expiryInput = document.getElementById("expiry_date");
-  if (expiryInput) {
-    expiryInput.addEventListener("keypress", function(e) {
-      if (!/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        e.preventDefault();
-        showWarning(expiryInput, "Sadece sayı girin");
-      }
-    });
-    expiryInput.addEventListener("input", function(e) {
-      let value = e.target.value.replace(/\D/g, "");
-      if (value.length > 2) {
-        value = value.slice(0,2) + "/" + value.slice(2,6);
-      }
-      e.target.value = value;
-    });
-  }
-  
-  // CVV alanı: Sadece rakam
-  const cvvInput = document.getElementById("cvv");
-  if (cvvInput) {
-    cvvInput.addEventListener("keypress", function(e) {
-      if (!/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        e.preventDefault();
-        showWarning(cvvInput, "Sadece sayı girin");
-      }
-    });
-  }
-  
-  // Form submit öncesinde, görünür alanların değerlerini değiştirmeden,
-  // temizlenmiş verileri gizli inputlara kopyalıyoruz ve görünür alanlardan name attribute'unu kaldırıyoruz.
-  const newPaymentForm = document.getElementById("new-payment-form");
-  if (newPaymentForm) {
-    newPaymentForm.addEventListener("submit", function(e) {
-      // Kart numarası
-      const cardInput = document.getElementById("card_number");
-      let cardValue = cardInput.value.replace(/\s+/g, "");
-      let hiddenCard = document.getElementById("hidden_card_number");
-      if (!hiddenCard) {
-        hiddenCard = document.createElement("input");
-        hiddenCard.type = "hidden";
-        hiddenCard.id = "hidden_card_number";
-        hiddenCard.name = "card_number";
-        newPaymentForm.appendChild(hiddenCard);
-      }
-      hiddenCard.value = cardValue;
-      cardInput.removeAttribute("name");
-      
-      // Son kullanma tarihi: hem temizlenmiş hem de görünür değeri ayrı hidden inputlara kopyalıyoruz.
-      const expiryInput = document.getElementById("expiry_date");
-      let expiryValue = expiryInput.value.replace(/\//g, ""); // örn: "122025"
-      let hiddenExpiry = document.getElementById("hidden_expiry_date");
-      if (!hiddenExpiry) {
-        hiddenExpiry = document.createElement("input");
-        hiddenExpiry.type = "hidden";
-        hiddenExpiry.id = "hidden_expiry_date";
-        hiddenExpiry.name = "expiry_date";
-        newPaymentForm.appendChild(hiddenExpiry);
-      }
-      hiddenExpiry.value = expiryValue;
-      
-      let hiddenExpiryDisplay = document.getElementById("hidden_expiry_date_display");
-      if (!hiddenExpiryDisplay) {
-        hiddenExpiryDisplay = document.createElement("input");
-        hiddenExpiryDisplay.type = "hidden";
-        hiddenExpiryDisplay.id = "hidden_expiry_date_display";
-        hiddenExpiryDisplay.name = "expiry_date_display";
-        newPaymentForm.appendChild(hiddenExpiryDisplay);
-      }
-      hiddenExpiryDisplay.value = expiryInput.value; // "MM/YYYY" format
-      
-      expiryInput.removeAttribute("name");
-    });
-  }
-});
+    }
+    
+    // Kart numarası alanı: Sadece rakam girişi, 4'lü gruplama
+    const cardInput = document.getElementById("card_number");
+    if (cardInput) {
+      cardInput.addEventListener("keypress", function(e) {
+        if (!/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          showWarning(cardInput, "Sadece sayı girin");
+        }
+      });
+      cardInput.addEventListener("input", function(e) {
+        let value = e.target.value.replace(/\D/g, "");
+        let formatted = value.match(/.{1,4}/g);
+        if (formatted) {
+          e.target.value = formatted.join(" ");
+        } else {
+          e.target.value = "";
+        }
+      });
+    }
+    
+    // Son kullanma tarihi alanı: Sadece rakam, 2 basamak girildikten sonra otomatik "/" ekleme ve tarih doğrulaması
+    const expiryInput = document.getElementById("expiry_date");
+    if (expiryInput) {
+      expiryInput.addEventListener("keypress", function(e) {
+        if (!/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          showWarning(expiryInput, "Sadece sayı girin");
+        }
+      });
+      expiryInput.addEventListener("input", function(e) {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length > 2) {
+          value = value.slice(0,2) + "/" + value.slice(2,6);
+        }
+        e.target.value = value;
+        
+        // Eğer persistent hata mesajı varsa, girdi düzeltilmeye başlandığında kaldır.
+        const parent = expiryInput.parentNode;
+        const persistentWarning = parent.querySelector(".input-warning.persistent");
+        if (persistentWarning) {
+          if (value.length < 2) {
+            persistentWarning.remove();
+          } else {
+            let monthCandidate = parseInt(value.slice(0,2), 10);
+            if (monthCandidate <= 12) {
+              persistentWarning.remove();
+            }
+          }
+        }
+        
+        // Eğer format tamamsa ("MM/YYYY"), tarih geçerliliğini kontrol et
+        if (value.length === 7) {
+          const [monthStr, yearStr] = value.split("/");
+          const month = parseInt(monthStr, 10);
+          const year = parseInt(yearStr, 10);
+          
+          // Ay 12'den büyükse, kalıcı uyarı göster
+          if (month > 12) {
+            showWarning(expiryInput, "Ay 12'den büyük olamaz", true);
+            return; // Diğer kontrolleri yapmadan çık
+          }
+          
+          const now = new Date();
+          const currentMonth = now.getMonth() + 1;
+          const currentYear = now.getFullYear();
+          
+          if ((year < currentYear) || 
+              (year === currentYear && month < currentMonth) ||
+              (year > currentYear + 100)) {
+            showWarning(expiryInput, "Lütfen geçerli bir tarih girin");
+          }
+        }
+      });
+    }
+    
+    // CVV alanı: Sadece rakam
+    const cvvInput = document.getElementById("cvv");
+    if (cvvInput) {
+      cvvInput.addEventListener("keypress", function(e) {
+        if (!/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          showWarning(cvvInput, "Sadece sayı girin");
+        }
+      });
+    }
+    
+    // Form submit öncesinde, görünür alanların değerlerini değiştirmeden,
+    // temizlenmiş verileri gizli inputlara kopyalıyoruz ve görünür alanlardan name attribute'unu kaldırıyoruz.
+    const newPaymentForm = document.getElementById("new-payment-form");
+    if (newPaymentForm) {
+      newPaymentForm.addEventListener("submit", function(e) {
+        // Kart numarası
+        const cardInput = document.getElementById("card_number");
+        let cardValue = cardInput.value.replace(/\s+/g, "");
+        let hiddenCard = document.getElementById("hidden_card_number");
+        if (!hiddenCard) {
+          hiddenCard = document.createElement("input");
+          hiddenCard.type = "hidden";
+          hiddenCard.id = "hidden_card_number";
+          hiddenCard.name = "card_number";
+          newPaymentForm.appendChild(hiddenCard);
+        }
+        hiddenCard.value = cardValue;
+        cardInput.removeAttribute("name");
+        
+        // Son kullanma tarihi: hem temizlenmiş hem de görünür değeri ayrı hidden inputlara kopyalıyoruz.
+        const expiryInput = document.getElementById("expiry_date");
+        let expiryValue = expiryInput.value.replace(/\//g, ""); // örn: "122025"
+        let hiddenExpiry = document.getElementById("hidden_expiry_date");
+        if (!hiddenExpiry) {
+          hiddenExpiry = document.createElement("input");
+          hiddenExpiry.type = "hidden";
+          hiddenExpiry.id = "hidden_expiry_date";
+          hiddenExpiry.name = "expiry_date";
+          newPaymentForm.appendChild(hiddenExpiry);
+        }
+        hiddenExpiry.value = expiryValue;
+        
+        let hiddenExpiryDisplay = document.getElementById("hidden_expiry_date_display");
+        if (!hiddenExpiryDisplay) {
+          hiddenExpiryDisplay = document.createElement("input");
+          hiddenExpiryDisplay.type = "hidden";
+          hiddenExpiryDisplay.id = "hidden_expiry_date_display";
+          hiddenExpiryDisplay.name = "expiry_date_display";
+          newPaymentForm.appendChild(hiddenExpiryDisplay);
+        }
+        hiddenExpiryDisplay.value = expiryInput.value; // "MM/YYYY" format
+        
+        expiryInput.removeAttribute("name");
+      });
+    }
+  });
 </script>
 {% endblock %}

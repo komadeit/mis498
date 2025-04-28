@@ -1,106 +1,268 @@
 {% extends "base.html" %}
 {% block title %}{{ dress.name }} - Vestie{% endblock %}
+
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="bg-white rounded-lg shadow-lg overflow-hidden md:flex">
-    <!-- Resim Kısmı -->
-    <div class="md:w-1/2">
-      <img
-        src="{{ dress.imageUrl }}"
-        alt="{{ dress.name }}"
-        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-      >
-    </div>
-    <!-- Metin Kısmı -->
-    <div class="p-6 md:w-1/2 flex flex-col justify-center">
-      <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ dress.name }}</h1>
-      <p class="text-gray-700 mb-6">{{ dress.description }}</p>
-      <!-- Ölçüler -->
-      <div class="mb-6">
-        <h2 class="text-xl font-semibold text-gray-800">Ölçüler</h2>
-        <ul class="mt-2 text-gray-700 space-y-1">
-          <li><span class="font-medium">Göğüs:</span> {{ dress.gogus }}</li>
-          <li><span class="font-medium">Bel:</span> {{ dress.bel }}</li>
-          <li><span class="font-medium">Kalça:</span> {{ dress.kalca }}</li>
-        </ul>
-      </div>
-      <!-- Fiyat ve Sepete Ekle Butonu -->
-      <div class="flex items-center justify-between">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <!-- Breadcrumb -->
+  <nav class="mb-8">
+    <ol class="flex items-center space-x-2 text-sm text-gray-500">
+      <li><a href="/" class="hover:text-rose-600 transition-colors">Ana Sayfa</a></li>
+      <li><i data-lucide="chevron-right" class="w-4 h-4"></i></li>
+      <li><a href="/dresses" class="hover:text-rose-600 transition-colors">Elbiseler</a></li>
+      <li><i data-lucide="chevron-right" class="w-4 h-4"></i></li>
+      <li class="text-gray-900 font-medium">{{ dress.name }}</li>
+    </ol>
+  </nav>
+
+  <div class="lg:grid lg:grid-cols-2 lg:gap-12">
+    <!-- Left Column: Images -->
+    <div class="space-y-6">
+      <!-- Yükleyen Bilgisi -->
+      <div class="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-sm">
+        <img src="{{ dress.uploader_pic }}" alt="Profil Fotoğrafı"
+             class="h-14 w-14 rounded-full object-cover ring-2 ring-rose-600 ring-offset-2">
         <div>
-          <span class="text-lg font-bold text-rose-600">{{ dress.price }} ₺ / gün</span>
-          {% if not dress.available %}
-            <span class="ml-2 inline-block bg-red-500 text-white text-xs px-2 py-1 rounded-full">Kiralık Değil</span>
+          <p class="text-sm text-gray-600">Yükleyen</p>
+          <a href="{{ url_for('public_profile', username=dress.uploader_slug) }}">
+            {{ dress.uploader_name }}
+          </a>
+          </a>
+          {# --- Değerlendirme (rating) bölümü geçici olarak kaldırıldı --- #}
+        </div>
+      </div>
+
+      <!-- Image Gallery -->
+      <div class="relative bg-white p-4 rounded-lg shadow-sm">
+        <!-- Main Image -->
+        <div class="relative h-[500px] mb-4 rounded-lg overflow-hidden">
+          <img id="main-image" src="{{ dress.pictures[0] }}" alt="{{ dress.name }}"
+               class="w-full h-full object-contain">
+          
+          <!-- Navigation Arrows -->
+          <button onclick="changeImage('prev')"
+                  class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200 group">
+            <i data-lucide="chevron-left" class="w-6 h-6 text-gray-700 group-hover:text-rose-600"></i>
+          </button>
+          <button onclick="changeImage('next')"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200 group">
+            <i data-lucide="chevron-right" class="w-6 h-6 text-gray-700 group-hover:text-rose-600"></i>
+          </button>
+        </div>
+
+        <!-- Thumbnails -->
+        <div class="grid grid-cols-6 gap-2">
+          {% for url in dress.pictures %}
+            <button onclick="setMainImage('{{ url }}')" 
+                    class="aspect-square rounded-md overflow-hidden ring-2 hover:ring-rose-600 transition-all duration-200 {% if loop.index0 == 0 %}ring-rose-600{% else %}ring-transparent{% endif %}">
+              <img src="{{ url }}" alt="{{ dress.name }}" class="w-full h-full object-cover">
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Details -->
+    <div class="mt-8 lg:mt-0">
+      <div class="bg-white rounded-lg shadow-sm p-6 space-y-6">
+        <!-- Basic Info -->
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">{{ dress.name }}</h1>
+          <div class="mt-4 flex items-center justify-between">
+            <div>
+              <span class="text-3xl font-bold text-rose-600">{{ dress.price }} ₺</span>
+              <span class="text-gray-600 text-lg">/gün</span>
+            </div>
+            {% if not dress.available %}
+              <span class="inline-flex items-center bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-full">
+                <i data-lucide="x-circle" class="w-4 h-4 mr-1"></i>
+                Kiralık Değil
+              </span>
+            {% else %}
+              <span class="inline-flex items-center bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+                <i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>
+                Kiralanabilir
+              </span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <h2 class="text-lg font-semibold text-gray-900 mb-2">Açıklama</h2>
+          <p class="text-gray-700 leading-relaxed">{{ dress.description }}</p>
+        </div>
+
+        <!-- Measurements -->
+        <div>
+          <h2 class="text-lg font-semibold text-gray-900 mb-4">Ölçüler</h2>
+          {% if dress.size %}
+            <div class="inline-flex items-center bg-gray-100 px-4 py-2 rounded-lg">
+              <i data-lucide="ruler" class="w-5 h-5 text-gray-600 mr-2"></i>
+              <span class="text-gray-900 font-medium">Beden: {{ dress.size }}</span>
+            </div>
+          {% else %}
+            <div class="grid grid-cols-3 gap-4">
+              <div class="bg-gray-100 p-4 rounded-lg text-center">
+                <span class="block text-sm text-gray-600">Göğüs</span>
+                <span class="text-lg font-medium text-gray-900">{{ dress.gogus }} cm</span>
+              </div>
+              <div class="bg-gray-100 p-4 rounded-lg text-center">
+                <span class="block text-sm text-gray-600">Bel</span>
+                <span class="text-lg font-medium text-gray-900">{{ dress.bel }} cm</span>
+              </div>
+              <div class="bg-gray-100 p-4 rounded-lg text-center">
+                <span class="block text-sm text-gray-600">Kalça</span>
+                <span class="text-lg font-medium text-gray-900">{{ dress.kalca }} cm</span>
+              </div>
+            </div>
           {% endif %}
         </div>
-        <button
-          id="add-to-cart"
-          class="px-5 py-2 bg-rose-600 text-white font-medium rounded hover:bg-rose-700 transition-colors"
-        >
-          Sepete Ekle
-        </button>
+
+        <!-- Actions -->
+        <div class="space-y-4 pt-4">
+          <button id="add-to-cart"
+                  class="w-full flex items-center justify-center px-6 py-4 bg-rose-600 text-white font-semibold rounded-lg hover:bg-rose-700 transition-all duration-200 transform hover:-translate-y-0.5">
+            <i data-lucide="shopping-cart" class="w-5 h-5 mr-2"></i>
+            Sepete Ekle
+          </button>
+          
+          <button id="add-to-favorites"
+                  class="w-full flex items-center justify-center px-6 py-4 border-2 border-rose-600 text-rose-600 font-semibold rounded-lg hover:bg-rose-50 transition-all duration-200">
+            <i data-lucide="heart" class="w-5 h-5 mr-2"></i>
+            Favorilere Ekle
+          </button>
+        </div>
+
+      {% if is_admin %}
+        <form method="POST"
+              action="{{ url_for('admin_delete_listing', id=dress.id) }}"
+              onsubmit="return confirm('Bu ilanı silmek istediğinize emin misiniz?');"
+              class="mt-6">
+          <button type="submit"
+                  class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg">
+            İlanı Sil
+          </button>
+        </form>
+      {% endif %}
       </div>
     </div>
   </div>
 </div>
+
+<!-- Login Modal -->
+{% if not logged_in %}
+  <div id="login-modal" 
+       class="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full mx-4 transform transition-all duration-300 scale-95">
+      <div class="relative">
+        <button id="close-modal" class="absolute top-0 right-0 p-2 text-gray-400 hover:text-gray-500">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="text-center">
+          <div class="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="user" class="w-6 h-6 text-rose-600"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Giriş Yapmanız Gerekiyor</h3>
+          <p class="text-gray-600 mb-6">Sepete ekleme işlemi yapabilmek için lütfen giriş yapın.</p>
+          
+          <div class="space-y-3">
+            <a href="/login" 
+               class="block w-full px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors">
+              Giriş Yap
+            </a>
+            <p class="text-sm text-gray-600">
+              Hesabınız yok mu? 
+              <a href="/signup" class="text-rose-600 hover:text-rose-700 font-medium">Kayıt Olun</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // Jinja -> JS: logged_in'i string olarak aktar
-  var loggedIn = "{{ 'true' if logged_in else 'false' }}";
-  
-  var addToCartBtn = document.getElementById("add-to-cart");
-  var loginModal   = document.getElementById("login-modal");
-  var closeModalBtn= document.getElementById("close-modal");
-  
-  // Kullanıcı login değilse, Sepete Ekle -> Modal göster
-  if (loggedIn === "false") {
-    addToCartBtn.addEventListener("click", function() {
-      if (loginModal) {
-        loginModal.style.display = "flex";
-      }
-    });
-  } else {
-    // loggedIn === "true" -> gerçekte sepete ekleme mantığı
-    addToCartBtn.addEventListener("click", function() {
-      alert("Sepete eklendi! (Test)");
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // Image Gallery
+  let currentImageIndex = 0;
+  const images = {{ dress.pictures|tojson }};
+
+  window.setMainImage = function(url) {
+    document.getElementById('main-image').src = url;
+    currentImageIndex = images.indexOf(url);
+    updateThumbnailStates();
+  };
+
+  window.changeImage = function(direction) {
+    if (direction === 'prev') {
+      currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+    } else {
+      currentImageIndex = (currentImageIndex + 1) % images.length;
+    }
+    setMainImage(images[currentImageIndex]);
+  };
+
+  function updateThumbnailStates() {
+    document.querySelectorAll('[onclick^="setMainImage"]').forEach((thumb, index) => {
+      thumb.classList.toggle('ring-rose-600', index === currentImageIndex);
+      thumb.classList.toggle('ring-transparent', index !== currentImageIndex);
     });
   }
 
-  // Modal kapatma
-  if (closeModalBtn && loginModal) {
-    closeModalBtn.addEventListener("click", function() {
-      loginModal.style.display = "none";
+  // Modal Management
+  const loggedIn = {{ 'true' if logged_in else 'false' }};
+  const loginModal = document.getElementById('login-modal');
+  const closeModalBtn = document.getElementById('close-modal');
+  const addToCartBtn = document.getElementById('add-to-cart');
+
+  function showModal() {
+    loginModal.classList.remove('opacity-0', 'pointer-events-none');
+    loginModal.querySelector('.scale-95').classList.remove('scale-95');
+    loginModal.querySelector('.scale-95').classList.add('scale-100');
+  }
+
+  function hideModal() {
+    loginModal.classList.add('opacity-0', 'pointer-events-none');
+    loginModal.querySelector('.scale-100').classList.remove('scale-100');
+    loginModal.querySelector('.scale-100').classList.add('scale-95');
+  }
+
+  if (!loggedIn) {
+    addToCartBtn.addEventListener('click', showModal);
+    closeModalBtn.addEventListener('click', hideModal);
+    
+    // Close on outside click
+    loginModal.addEventListener('click', (e) => {
+      if (e.target === loginModal) hideModal();
+    });
+
+    // Close on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') hideModal();
+    });
+  } else {
+    addToCartBtn.addEventListener('click', () => {
+      // TODO: Implement cart functionality
+      alert('Sepete eklendi! (Test)');
     });
   }
+
+  // Favorites Button
+  const favBtn = document.getElementById('add-to-favorites');
+  favBtn.addEventListener('click', () => {
+    if (!loggedIn) {
+      showModal();
+      return;
+    }
+    // TODO: Implement favorites functionality
+    alert('Favorilere eklendi! (Test)');
+  });
 });
 </script>
 {% endblock %}
-
-{% if not logged_in %}
-<!-- Login Olmayan Kullanıcılar İçin Modal -->
-<div
-  id="login-modal"
-  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-  style="display: none;"
->
-  <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full relative">
-    <button id="close-modal" class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none">
-      <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
-    </button>
-    <h3 class="text-xl font-bold text-gray-800 mb-4">Giriş Yapmanız Gerekiyor</h3>
-    <p class="text-gray-600 mb-6">Sepete ekleme işlemi yapabilmek için lütfen giriş yapın.</p>
-    <a
-      href="/login"
-      class="block text-center px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 transition-colors mb-2"
-    >
-      Giriş Yap
-    </a>
-    <p class="text-center text-sm text-gray-600">
-      Hesabınız yok mu?
-      <a href="/signup" class="text-rose-600 hover:underline">Kayıt Olun</a>
-    </p>
-  </div>
-</div>
-{% endif %}

@@ -1,169 +1,161 @@
 {% extends "base.html" %}
 {% block title %}Nasıl Çalışır - Vestie{% endblock %}
-{% block content %}
 
-<!-- Hero Bölümü -->
-<section class="relative pt-16">
+{% block content %}
+<!-- Hero Section -->
+<section class="relative min-h-[60vh] flex items-center">
   <div class="absolute inset-0">
     <img class="h-full w-full object-cover" 
-         src="https://images.unsplash.com/photo-1629904853716-f0bc54eea481?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA=="
+         src="https://images.unsplash.com/photo-1629904853716-f0bc54eea481?q=80&w=2070&auto=format&fit=crop"
          alt="Nasıl Çalışır">
-    <!-- Dark Fog Overlay -->
-    <div class="absolute inset-0 bg-black opacity-70"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/70 to-black/60"></div>
   </div>
-  <div class="relative px-4 py-32 sm:px-6 sm:py-40 lg:py-48 lg:px-8 text-center text-white">
-    <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-      <span class="block">Nasıl Çalışır?</span>
-    </h1>
-    <p class="mt-6 max-w-2xl mx-auto text-xl">
-      Vestie'de sürecimiz; elbisenin teslim alınmasından kalite kontrol, kuru temizleme, kullanım ve geri dönüş aşamalarını içerir.
-    </p>
-  </div>
-</section>
-
-<!-- Süreç Adımları -->
-<section class="relative bg-white py-16 sm:py-24 lg:py-32">
-  <div class="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
-    <!-- İlk Satır: Adım 1, 2, 3 -->
-    <div class="grid grid-cols-5 gap-4 items-center">
-      <!-- Adım 1 -->
-      <div class="relative group">
-        <div class="flex items-center justify-center">
-          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
-          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
-            <span class="text-white text-2xl font-bold">1</span>
-          </div>
-        </div>
-        <div class="mt-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Elbiseyi Teslim Alıyoruz</h3>
-          <p class="text-base text-gray-500 leading-relaxed">
-            Kiralayandan elbiseyi özenle alıyor, ilk kalite kontrolümüzü gerçekleştiriyoruz.
-          </p>
-        </div>
-      </div>
-      <!-- Ok 1: Sağbakan -->
-      <div class="flex justify-center">
-        <i data-lucide="arrow-right" class="w-8 h-8 text-rose-400 animate-pulse"></i>
-      </div>
-      <!-- Adım 2 -->
-      <div class="relative group">
-        <div class="flex items-center justify-center">
-          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
-          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
-            <span class="text-white text-2xl font-bold">2</span>
-          </div>
-        </div>
-        <div class="mt-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Kuru Temizlemeye Gönderiyoruz</h3>
-          <p class="text-base text-gray-500 leading-relaxed">
-            Profesyonel kuru temizleme merkezimize göndererek, elbiseyi temizlettiriyoruz.
-          </p>
-        </div>
-      </div>
-      <!-- Ok 2: Sağbakan -->
-      <div class="flex justify-center">
-        <i data-lucide="arrow-right" class="w-8 h-8 text-rose-400 animate-pulse"></i>
-      </div>
-      <!-- Adım 3 -->
-      <div class="relative group">
-        <div class="flex items-center justify-center">
-          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
-          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
-            <span class="text-white text-2xl font-bold">3</span>
-          </div>
-        </div>
-        <div class="mt-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Size Teslim Ediyoruz</h3>
-          <p class="text-base text-gray-500 leading-relaxed">
-            Temizlenen elbiseyi, kiralama yapmak üzere güvenle adresinize gönderiyoruz.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dikey Ok: 5 sütunlu grid, sağdaki sütuna hizalı -->
-    <div class="grid grid-cols-5">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div class="ml-3 my-2 flex justify-center">
-        <i data-lucide="arrow-down" class="w-8 h-8 text-rose-400 animate-pulse"></i>
-      </div>
-    </div>
-
-    <!-- İkinci Satır: Adım 4, 5, 6 -->
-    <div class="grid grid-cols-5 gap-4 items-center mt-8">
-      <!-- Adım 4 -->
-      <div class="relative group">
-        <div class="flex items-center justify-center">
-          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
-          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
-            <span class="text-white text-2xl font-bold">4</span>
-          </div>
-        </div>
-        <div class="mt-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Kullanım Sonrası Teslim</h3>
-          <p class="text-base text-gray-500 leading-relaxed">
-            Elbiseyi kullandıktan sonra, size gönderilen paketten çıkarıp bize geri gönderirsiniz.
-          </p>
-        </div>
-      </div>
-      <!-- Ok 3: Soldan bakan -->
-      <div class="flex justify-center">
-        <i data-lucide="arrow-left" class="w-8 h-8 text-rose-400 animate-pulse"></i>
-      </div>
-      <!-- Adım 5 -->
-      <div class="relative group">
-        <div class="flex items-center justify-center">
-          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
-          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
-            <span class="text-white text-2xl font-bold">5</span>
-          </div>
-        </div>
-        <div class="mt-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Tekrar Kalite Kontrol</h3>
-          <p class="text-base text-gray-500 leading-relaxed">
-            Geri gelen elbiseyi yeniden kalite kontrolünden geçiriyor, olası sorunları tespit ediyoruz.
-          </p>
-        </div>
-      </div>
-      <!-- Ok 4: Soldan bakan -->
-      <div class="flex justify-center">
-        <i data-lucide="arrow-left" class="w-8 h-8 text-rose-400 animate-pulse"></i>
-      </div>
-      <!-- Adım 6 -->
-      <div class="relative group">
-        <div class="flex items-center justify-center">
-          <div class="absolute w-24 h-24 bg-rose-100 rounded-full transform transition-transform group-hover:scale-110"></div>
-          <div class="relative w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
-            <span class="text-white text-2xl font-bold">6</span>
-          </div>
-        </div>
-        <div class="mt-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Kiralayana Geri Gönderiyoruz</h3>
-          <p class="text-base text-gray-500 leading-relaxed">
-            Son kontrolün ardından elbiseyi kiralayana güvenle geri gönderiyoruz.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Additional Info Section -->
-<section class="bg-rose-50">
-  <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-    <div class="text-center">
-      <h2 class="text-3xl font-extrabold text-rose-900 sm:text-4xl">Güvenli ve Kolay Kiralama</h2>
-      <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-        Her adımda sizin memnuniyetiniz için çalışıyoruz. Profesyonel ekibimiz ve güvenilir iş ortaklarımızla en iyi hizmeti sunmayı hedefliyoruz.
+  <div class="relative container mx-auto px-4 py-20">
+    <div class="max-w-3xl">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+        Vestie ile Elbise Kiralama
+        <span class="block mt-2 text-rose-500">Nasıl Çalışır?</span>
+      </h1>
+      <p class="mt-6 text-lg md:text-xl text-gray-300 max-w-2xl">
+        Vestie'de sürecimiz basit ve güvenli. Elbisenin teslim alınmasından son aşamaya kadar her detayı sizin için düşündük.
       </p>
-      <div class="mt-8">
-        <a href="/dresses" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700">
-          Hemen Keşfet
-        </a>
+    </div>
+  </div>
+</section>
+
+<!-- Process Steps -->
+<section class="py-20 bg-white relative overflow-hidden">
+  <div class="container mx-auto px-4">
+    <!-- Process Timeline -->
+    <div class="hidden lg:block absolute left-1/2 top-1/2 w-[2px] h-[80%] bg-rose-100 transform -translate-x-1/2 -translate-y-1/2"></div>
+    
+    <div class="grid gap-16 relative">
+      <!-- Step 1 -->
+      <div class="relative group" data-step="1">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+          <div class="lg:text-right order-1">
+            <div class="p-6 bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <span class="inline-block text-rose-600 text-4xl font-bold mb-4">1. Adım<main></main></span>
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Elbiseyi Teslim Alıyoruz</h3>
+              <p class="text-gray-600">Kiralayandan elbiseyi özenle alıyor, detaylı ilk kalite kontrolümüzü gerçekleştiriyoruz.</p>
+            </div>
+          </div>
+          <div class="hidden lg:flex justify-center mt-8 lg:mt-0 order-2">
+            <div class="w-16 h-16 bg-rose-600 rounded-full flex items-center justify-center shadow-lg">
+              <i data-lucide="package" class="w-8 h-8 text-white"></i>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Step 2 -->
+      <div class="relative group" data-step="2">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+          <div class="hidden lg:flex justify-center mt-8 lg:mt-0 order-1">
+            <div class="w-16 h-16 bg-rose-600 rounded-full flex items-center justify-center shadow-lg">
+              <i data-lucide="refresh-cw" class="w-8 h-8 text-white"></i>
+            </div>
+          </div>
+          <div class="order-2">
+            <div class="p-6 bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <span class="inline-block text-rose-600 text-4xl font-bold mb-4">2. Adım</span>
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Kuru Temizleme</h3>
+              <p class="text-gray-600">Profesyonel kuru temizleme merkezimizde elbiseyi özenle temizliyor ve bakımını yapıyoruz.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="relative group" data-step="3">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+          <div class="lg:text-right order-1">
+            <div class="p-6 bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <span class="inline-block text-rose-600 text-4xl font-bold mb-4">3. Adım</span>
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Size Özel Teslimat</h3>
+              <p class="text-gray-600">Temizlenen ve özenle paketlenen elbiseyi güvenli bir şekilde size ulaştırıyoruz.</p>
+            </div>
+          </div>
+          <div class="hidden lg:flex justify-center mt-8 lg:mt-0 order-2">
+            <div class="w-16 h-16 bg-rose-600 rounded-full flex items-center justify-center shadow-lg">
+              <i data-lucide="truck" class="w-8 h-8 text-white"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="relative group" data-step="4">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+          <div class="hidden lg:flex justify-center mt-8 lg:mt-0 order-1">
+            <div class="w-16 h-16 bg-rose-600 rounded-full flex items-center justify-center shadow-lg">
+              <i data-lucide="heart" class="w-8 h-8 text-white"></i>
+            </div>
+          </div>
+          <div class="order-2">
+            <div class="p-6 bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <span class="inline-block text-rose-600 text-4xl font-bold mb-4">4. Adım</span>
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Özel Gününüzde Kullanım</h3>
+              <p class="text-gray-600">Özel gününüzde elbiseyi güvenle kullanın. Biz tüm detayları düşündük.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="relative group" data-step="5">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+          <div class="lg:text-right order-1">
+            <div class="p-6 bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <span class="inline-block text-rose-600 text-4xl font-bold mb-4">5. Adım</span>
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Kolay İade</h3>
+              <p class="text-gray-600">Kullanım sonrası elbiseyi size sağlanan özel paket ile kolayca iade edebilirsiniz.</p>
+            </div>
+          </div>
+          <div class="hidden lg:flex justify-center mt-8 lg:mt-0 order-2">
+            <div class="w-16 h-16 bg-rose-600 rounded-full flex items-center justify-center shadow-lg">
+              <i data-lucide="box" class="w-8 h-8 text-white"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="relative group" data-step="6">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+          <div class="hidden lg:flex justify-center mt-8 lg:mt-0 order-1">
+            <div class="w-16 h-16 bg-rose-600 rounded-full flex items-center justify-center shadow-lg">
+              <i data-lucide="check-circle" class="w-8 h-8 text-white"></i>
+            </div>
+          </div>
+          <div class="order-2">
+            <div class="p-6 bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <span class="inline-block text-rose-600 text-4xl font-bold mb-4">6. Adım</span>
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Son Kontrol ve Teslim</h3>
+              <p class="text-gray-600">Son kalite kontrollerimizi yapıp elbiseyi sahibine güvenle teslim ediyoruz.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="bg-gradient-to-b from-rose-50 via-rose-100/20 to-white py-20">
+  <div class="container mx-auto px-4 text-center">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+        Hemen Keşfetmeye Başlayın
+      </h2>
+      <p class="text-lg text-gray-600 mb-8">
+        Yüzlerce elbise arasından size en uygun olanı seçin, güvenle kiralayın.
+      </p>
+      <a href="/dresses" 
+         class="inline-flex items-center px-8 py-4 bg-rose-600 text-white rounded-full font-medium text-lg hover:bg-rose-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
+        <span>Elbiseleri Keşfet</span>
+        <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+      </a>
     </div>
   </div>
 </section>
@@ -172,8 +164,49 @@
 
 {% block scripts %}
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize Lucide icons
   if (typeof lucide !== "undefined") {
     lucide.createIcons();
   }
+
+  // Intersection Observer for animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('opacity-100', 'translate-y-0');
+        entry.target.classList.remove('opacity-0', 'translate-y-4');
+      }
+    });
+  }, {
+    threshold: 0.1
+  });
+
+  // Observe all step containers
+  document.querySelectorAll('[data-step]').forEach((el) => {
+    el.classList.add('opacity-0', 'translate-y-4', 'transition-all', 'duration-700');
+    observer.observe(el);
+  });
+});
 </script>
+
+<style>
+[data-step] {
+  transition: all 0.5s ease-out;
+}
+
+@media (min-width: 1024px) {
+  [data-step="1"], [data-step="3"], [data-step="5"] {
+    transform: translateX(-20px);
+  }
+  
+  [data-step="2"], [data-step="4"], [data-step="6"] {
+    transform: translateX(20px);
+  }
+  
+  .group:hover [data-step] {
+    transform: translateX(0);
+  }
+}
+</style>
 {% endblock %}

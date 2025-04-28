@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ user.firstname }} {{ user.lastname }} - Vestie{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-6">
+  <!-- Kullanıcı Bilgisi -->
+  <div class="flex items-center space-x-4">
+    <img src="{{ user.profile_pic_url }}" alt="Profil" class="h-16 w-16 rounded-full object-cover border-2 border-rose-600">
+    <div>
+      <h1 class="text-2xl font-bold">{{ user.firstname }} {{ user.lastname }}</h1>
+      {% if city %}
+        <p class="text-gray-600">Şehir: {{ city }}</p>
+      {% endif %}
+      {# rating ve review_count ileride gelecek #}
+    </div>
+  </div>
+
+  <!-- İlanlar -->
+  <h2 class="text-xl font-semibold">İlanları</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {% for d in dresses %}
+    <a href="{{ url_for('dress_detail', id=d.id) }}">
+      <div class="group relative border rounded-lg hover:shadow-lg transition-shadow">
+        <div class="aspect-[2/3] w-full overflow-hidden rounded-t-lg bg-gray-200">
+          <img src="{{ d.imageUrl }}" alt="{{ d.name }}"
+               class="h-full w-full object-cover group-hover:opacity-75 transition-opacity"/>
+        </div>
+        <div class="p-4">
+          <h3 class="text-sm font-semibold text-gray-700">{{ d.name }}</h3>
+          <p class="mt-1 text-sm text-gray-500">Beden: {{ d.size }}</p>
+          <p class="mt-2 text-sm font-bold text-rose-600">{{ d.price }} ₺/gün</p>
+          {% if not d.available %}
+          <span class="absolute top-2 right-2 bg-red-500 text-white rounded-full px-2 text-xs">Kiralık Değil</span>
+          {% endif %}
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

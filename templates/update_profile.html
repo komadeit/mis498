@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+{% block title %}Profil Bilgilerimi Güncelle - Vestie{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-2xl mx-auto">
+    <!-- Header Section -->
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Profil Bilgilerimi Güncelle</h2>
+      <p class="text-gray-600">Profil bilgilerinizi güncelleyebilir ve fotoğrafınızı değiştirebilirsiniz.</p>
+    </div>
+
+    <!-- Form Başlangıcı -->
+    <form method="POST" action="{{ url_for('update_profile') }}" enctype="multipart/form-data" class="bg-white shadow-xl rounded-2xl overflow-hidden">
+      <!-- Profil Fotoğrafı Bölümü -->
+      <div class="relative h-32 bg-gradient-to-r from-rose-500 to-pink-500 flex items-center justify-center">
+        <!-- Fotoğraf kutusu kapsayıcısı (sabit boyut, ortalanmış) -->
+        <div class="w-24 h-24 relative">
+          <div class="w-full h-full rounded-full border-4 border-white bg-white overflow-hidden shadow-lg">
+            {% if user.profile_pic_url %}
+              <img src="{{ user.profile_pic_url }}" alt="Profil Fotoğrafı" class="w-full h-full object-cover" id="profile-photo">
+            {% else %}
+              <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                <i data-lucide="user" class="w-12 h-12 text-gray-400"></i>
+              </div>
+            {% endif %}
+          </div>
+          <!-- Overlay: Tıklanabilir alan, sabit boyut; hitbox fotoğraf kutusuyla aynı -->
+          <label for="profile_pic" class="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
+            <i data-lucide="camera" class="w-6 h-6 text-white"></i>
+          </label>
+          <!-- Dosya inputu (formun içinde) -->
+          <input id="profile_pic" name="profile_pic" type="file" accept="image/*" class="hidden" onchange="initCropper(this);">
+        </div>
+      </div>
+      <!-- Profil Fotoğrafını Kaldır Butonu, fotoğraf kutusunun altında -->
+      <div class="mt-4 text-center">
+        <button type="button" onclick="openRemovePhotoConfirmModal();" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+          Profil Fotoğrafını Kaldır
+        </button>
+        <!-- Gizli input: Kaldırma onayı verilirse "on" değeri -->
+        <input type="hidden" id="remove_photo_input" name="remove_profile_pic" value="">
+        <!-- Gizli input: Kırpılmış resmin base64 verisi -->
+        <input type="hidden" id="cropped_image_input" name="cropped_image" value="">
+      </div>
+
+      <!-- Diğer Form Alanları -->
+      <div class="p-8 pt-12 space-y-6">
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <!-- Ad -->
+          <div>
+            <label for="firstname" class="block text-sm font-medium text-gray-700">Ad</label>
+            <input id="firstname" name="firstname" type="text" required value="{{ user.firstname }}"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm transition-colors">
+          </div>
+          <!-- Soyad -->
+          <div>
+            <label for="lastname" class="block text-sm font-medium text-gray-700">Soyad</label>
+            <input id="lastname" name="lastname" type="text" required value="{{ user.lastname }}"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm transition-colors">
+          </div>
+          <!-- E-posta -->
+          <div class="sm:col-span-2">
+            <label for="email" class="block text-sm font-medium text-gray-700">E-posta</label>
+            <input id="email" name="email" type="email" required value="{{ user.email }}"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm transition-colors">
+          </div>
+          <!-- Buttons -->
+          <div class="sm:col-span-2 flex justify-end space-x-3 pt-4">
+            <a href="/profile" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-rose-500 transition-colors">
+              <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Geri Dön
+            </a>
+            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-rose-500 transition-colors">
+              <i data-lucide="save" class="w-4 h-4 mr-2"></i> Kaydet
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- Form Sonu -->
+  </div>
+</div>
+
+<!-- Cropper Modal (Kırpma ve Pozisyonlama Modalı) -->
+<div id="cropper-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+  <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+  <div class="bg-white rounded-lg p-4 max-w-lg w-full relative">
+    <h3 class="text-lg font-medium text-gray-900 text-center mb-4">Fotoğrafı Kırpın & Pozisyonlayın</h3>
+    <div class="w-full h-80 overflow-hidden">
+      <img id="cropper-image" src="" class="block max-w-full" style="max-height: 100%;" />
+    </div>
+    <div class="mt-4 flex justify-end space-x-3">
+      <button type="button" onclick="cancelCropper();" class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors">İptal</button>
+      <button type="button" onclick="applyCropper();" class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm hover:bg-rose-700 transition-colors">Onayla</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profil Fotoğrafı Kaldırma Onay Modalı -->
+<div id="remove-photo-modal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div id="remove-photo-modal-content" class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4 transform transition-all duration-300 scale-95 opacity-0">
+    <div class="text-center">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">Fotoğrafı Kaldır</h3>
+      <p class="text-sm text-gray-500 mb-6">Profil fotoğrafınızı kaldırmak istediğinize emin misiniz?</p>
+      <div class="flex justify-center space-x-4">
+        <button type="button" onclick="confirmRemovePhoto();" class="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors">Evet</button>
+        <button type="button" onclick="closeRemovePhotoModal();" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">Hayır</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Enhanced Flash Modal (Sadece Başarı Durumları İçin) -->
+<div id="flash-modal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity duration-300">
+  <div id="flash-modal-content" class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4 transform transition-all duration-300 scale-95 opacity-0">
+    <div class="text-center">
+      <!-- Success Icon -->
+      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+        <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2" id="flash-modal-title">Güncelleme Başarılı!</h3>
+      <p class="text-sm text-gray-500 mb-4" id="flash-modal-message">Profil sayfasına yönlendiriliyorsunuz...</p>
+      <!-- Enhanced Loading Spinner -->
+      <div class="flex justify-center items-center space-x-2">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- JavaScript Bölümü -->
+<script type="text/javascript">
+// @ts-nocheck
+// Dinamik Jinja verilerini güvenli şekilde JavaScript değişkenlerine aktaralım.
+var redirect_after = {{ redirect_after|default(3000)|tojson }};
+var flash_messages = {{ get_flashed_messages()|tojson }};
+var flash_message = (flash_messages.length > 0) ? flash_messages[0] : "";
+
+document.addEventListener('DOMContentLoaded', function() {
+  lucide.createIcons();
+  if (flash_message) {
+    showFlashModal(flash_message, redirect_after);
+  }
+});
+
+var cropper = null;
+var selectedFile = null;
+
+// Başlangıçta cropper modalını açan fonksiyon; dosya inputundan gelen resmi cropper modalında gösterir.
+function initCropper(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    selectedFile = input.files[0];
+    reader.onload = function(e) {
+      // Cropper modalında gösterilecek resme atıyoruz.
+      var cropperImage = document.getElementById('cropper-image');
+      cropperImage.src = e.target.result;
+      openCropperModal();
+    };
+    reader.readAsDataURL(selectedFile);
+  }
+}
+
+function openCropperModal() {
+  var cropperModal = document.getElementById('cropper-modal');
+  cropperModal.classList.remove('hidden');
+  // Cropper nesnesini başlat
+  var image = document.getElementById('cropper-image');
+  cropper = new Cropper(image, {
+    aspectRatio: 1, // Kare kırpma, istenirse değiştirebilirsiniz.
+    viewMode: 1,
+    autoCropArea: 1
+  });
+}
+
+function cancelCropper() {
+  // Cropper modalı kapat, cropper nesnesini yok et.
+  if (cropper) {
+    cropper.destroy();
+    cropper = null;
+  }
+  document.getElementById('cropper-modal').classList.add('hidden');
+  // Eğer gerekirse file inputu temizlenebilir:
+  document.getElementById('profile_pic').value = '';
+  selectedFile = null;
+}
+
+function applyCropper() {
+  if (cropper) {
+    // Kırpılmış veriyi belirli bir boyutta alıyoruz (örneğin 250x250)
+    var canvas = cropper.getCroppedCanvas({
+      width: 250,
+      height: 250
+    });
+    // Base64 verisini alıyoruz.
+    var croppedDataUrl = canvas.toDataURL('image/jpeg');
+    // Ana formdaki önizleme alanını kırpılmış resim ile güncelliyoruz.
+    document.getElementById('profile-photo').src = croppedDataUrl;
+    // Gizli inputa kırpılmış resmin base64 verisini atıyoruz.
+    document.getElementById('cropped_image_input').value = croppedDataUrl;
+    // Cropper'ı yok edip modalı kapatıyoruz.
+    cropper.destroy();
+    cropper = null;
+    document.getElementById('cropper-modal').classList.add('hidden');
+  }
+}
+
+// Mevcut preview modal fonksiyonlarını da koruyoruz (alternatif seçenek olarak kullanılabilir):
+function previewImage(input) {
+  // Eğer cropper kullanılacaksa, initCropper() çağrılır.
+  initCropper(input);
+}
+
+function openPreviewModal() {
+  // Bu fonksiyonu kullanmak yerine cropper modalı kullanıyoruz.
+}
+
+function closePreviewModal() {
+  // Bu fonksiyonu kullanmak yerine cropper modalı kapatılıyor.
+}
+
+function cancelPreviewImage() {
+  // Alternatif: Eğer cropper modalından iptal edilirse.
+  cancelCropper();
+}
+
+function confirmImage() {
+  // Alternatif: Eğer cropper modalından onay butonuna basılırsa.
+  applyCropper();
+}
+
+function showFlashModal(message, delay) {
+  var flashModal = document.getElementById('flash-modal');
+  var flashContent = document.getElementById('flash-modal-content');
+  document.getElementById('flash-modal-message').innerText = message;
+  flashModal.classList.remove('hidden');
+  setTimeout(function() {
+    flashContent.classList.remove('scale-95', 'opacity-0');
+  }, 50);
+  setTimeout(function() {
+    closeFlashModal();
+    window.location.href = "/profile";
+  }, delay);
+}
+
+function closeFlashModal() {
+  var flashContent = document.getElementById('flash-modal-content');
+  flashContent.classList.add('scale-95', 'opacity-0');
+  setTimeout(function() {
+    document.getElementById('flash-modal').classList.add('hidden');
+  }, 300);
+}
+
+function openRemovePhotoConfirmModal() {
+  document.getElementById('remove-photo-modal').classList.remove('hidden');
+  document.getElementById('remove-photo-modal-content').classList.remove('scale-95', 'opacity-0');
+}
+
+function closeRemovePhotoModal() {
+  var modalContent = document.getElementById('remove-photo-modal-content');
+  modalContent.classList.add('scale-95', 'opacity-0');
+  setTimeout(function() {
+    document.getElementById('remove-photo-modal').classList.add('hidden');
+  }, 300);
+}
+
+function confirmRemovePhoto() {
+  document.getElementById('remove_photo_input').value = "on";
+  var profilePhoto = document.getElementById('profile-photo');
+  if (profilePhoto) {
+    profilePhoto.src = "/static/images/default_profile.jpg";
+  }
+  closeRemovePhotoModal();
+}
+
+document.querySelector('form').addEventListener('submit', function(e) {
+  var email = document.getElementById('email').value;
+  var firstname = document.getElementById('firstname').value;
+  var lastname = document.getElementById('lastname').value;
+  if (!email || !firstname || !lastname) {
+    e.preventDefault();
+    alert('Lütfen tüm zorunlu alanları doldurun.');
+    return;
+  }
+  if (email.indexOf('@') === -1) {
+    e.preventDefault();
+    alert('Lütfen geçerli bir e-posta adresi girin.');
+    return;
+  }
+});
+</script>
+{% endblock %}

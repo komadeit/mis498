@@ -1,0 +1,52 @@
+{# templates/admin.html #}
+{% extends "base.html" %}
+{% block title %}Admin Panel – Vestie{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+  <!-- Başlık -->
+  <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+
+  <!-- Metrik Kartlar -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-sm font-medium text-gray-500">Kayıtlı Kullanıcılar</h2>
+      <p class="mt-2 text-3xl font-bold text-gray-900">{{ total_users }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-sm font-medium text-gray-500">Toplam İlan</h2>
+      <p class="mt-2 text-3xl font-bold text-gray-900">{{ total_listings }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-sm font-medium text-gray-500">Tüm Girişler</h2>
+      <p class="mt-2 text-3xl font-bold text-gray-900">{{ total_logins }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-sm font-medium text-gray-500">Son 24s Aktif Kullanıcılar</h2>
+      <p class="mt-2 text-3xl font-bold text-gray-900">{{ unique_recent_users }}</p>
+    </div>
+  </div>
+
+  <!-- Yönetim Kısmı -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <a href="{{ url_for('admin_users') }}"
+       class="block bg-white rounded-lg shadow hover:shadow-md transition p-6">
+      <div class="flex items-center">
+        <i data-lucide="users" class="w-8 h-8 text-rose-600"></i>
+        <h3 class="ml-4 text-xl font-semibold text-gray-900">Kullanıcıları Yönet</h3>
+      </div>
+      <p class="mt-2 text-gray-600">Kayıtlı tüm kullanıcıları listele ve düzenle.</p>
+    </a>
+    <a href="{{ url_for('admin_listings') }}"
+       class="block bg-white rounded-lg shadow hover:shadow-md transition p-6">
+      <div class="flex items-center">
+        <i data-lucide="package" class="w-8 h-8 text-rose-600"></i>
+        <h3 class="ml-4 text-xl font-semibold text-gray-900">İlanları Yönet</h3>
+      </div>
+      <p class="mt-2 text-gray-600">Tüm ilanları görüntüle, onayla veya sil.</p>
+    </a>
+  </div>
+
+</div>
+{% endblock %}

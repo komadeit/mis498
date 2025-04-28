@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+{% block title %}Elbise Yükle - Vestie{% endblock %}
+
+{% block content %}
+
+  <!-- Başarı Modalı: Eğer flash mesajında "Elbise başarıyla yüklendi!" varsa -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages and messages[0] == "Elbise başarıyla yüklendi!" %}
+      <div id="success-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+          <h3 class="text-2xl font-semibold text-green-600 mb-4">Elbise başarıyla yayında!</h3>
+          <div class="flex justify-center space-x-4">
+            <a href="/" class="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 transition">Ana Sayfa</a>
+            <a href="/profile/ilanlar" class="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 transition">İlanlarım</a>
+          </div>
+        </div>
+      </div>
+      <script>
+        setTimeout(function(){
+          window.location.href = "/";
+        }, 5000);
+      </script>
+    {% endif %}
+  {% endwith %}
+
+  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-lg">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Yeni Elbise Yükle</h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Elbisenizin bilgilerini girin ve fotoğraflarınızı yükleyin.
+      </p>
+    </div>
+
+    <!-- Form Başlangıcı -->
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
+      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <!-- Form; dosya inputları modal içinde de yer alacak -->
+        <form id="upload-form" action="{{ url_for('upload_dress') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+          
+          <!-- Elbise Adı -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Elbise Adı</label>
+            <input id="name" name="name" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" placeholder="Örn: Kırmızı Tül Abiye">
+          </div>
+
+          <!-- Fiyat -->
+          <div>
+            <label for="price" class="block text-sm font-medium text-gray-700">Günlük Fiyat (TL)</label>
+            <input id="price" name="price" type="number" required min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" placeholder="Örn: 299">
+          </div>
+
+          <!-- Beden Türü Seçimi -->
+          <div>
+            <span class="block text-sm font-medium text-gray-700">Beden Türü</span>
+            <div class="mt-1 flex space-x-6">
+              <label class="inline-flex items-center">
+                <input type="radio" name="size_type" value="standard" checked class="form-radio text-rose-600">
+                <span class="ml-2">Standart Beden</span>
+              </label>
+              <label class="inline-flex items-center">
+                <input type="radio" name="size_type" value="custom" class="form-radio text-rose-600">
+                <span class="ml-2">Özel Ölçüler</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Standart Beden Seçimi -->
+          <div id="standard-size-container">
+            <label for="standard_size" class="block text-sm font-medium text-gray-700">Standart Beden</label>
+            <select id="standard_size" name="standard_size" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
+              <option value="">Seçiniz</option>
+              <option value="XS">XS</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+              <option value="XXL">XXL</option>
+            </select>
+          </div>
+
+          <!-- Özel Ölçüler -->
+          <div id="custom-size-container" class="hidden">
+            <span class="block text-sm font-medium text-gray-700">Özel Ölçüler (cm)</span>
+            <div class="grid grid-cols-3 gap-2 mt-1">
+              <input type="text" name="chest" placeholder="Göğüs" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
+              <input type="text" name="waist" placeholder="Bel" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
+              <input type="text" name="hip" placeholder="Kalça" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm">
+            </div>
+          </div>
+
+          <!-- Fotoğraf Yükleme Butonu -->
+          <div>
+            <button type="button" id="open-photo-modal" class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+              Fotoğrafları Ekle
+            </button>
+          </div>
+
+          <!-- Seçilen Fotoğrafların Thumbnail Alanı -->
+          <div id="photo-thumbnails" class="grid grid-cols-3 gap-2"></div>
+
+          <!-- Açıklama -->
+          <div>
+            <label for="description" class="block text-sm font-medium text-gray-700">Açıklama</label>
+            <textarea id="description" name="description" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm" placeholder="Elbise hakkında kısa açıklama"></textarea>
+          </div>
+
+          <div>
+            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+              Elbiseyi Yükle
+            </button>
+          </div>
+
+          <!-- Fotoğraf Yükleme Modalı; dosya inputları formun içinde kalacak -->
+          <div id="photo-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative">
+              <h3 class="text-xl font-semibold text-center text-gray-800 mb-4">Fotoğraflarınızı Yükleyin</h3>
+              <!-- Grid: 6 hücre (3x2) -->
+              <div id="photo-grid" class="grid grid-cols-3 gap-4">
+                {% for i in range(6) %}
+                  <div class="h-32 w-full border-2 border-dashed border-gray-300 flex items-center justify-center relative group" data-index="{{ i }}" draggable="true">
+                    <span class="text-3xl text-gray-400 cursor-pointer add-photo group-hover:text-rose-600 transition">+</span>
+                    <!-- Dosya inputu; name="photo" kalmalı -->
+                    <input type="file" accept="image/*" name="photo" class="hidden photo-input" data-index="{{ i }}">
+                  </div>
+                {% endfor %}
+              </div>
+              <h5 class="text-center text-gray-400 mt-3">
+                Fotoğraflarını sürükleyip bırakarak yükleyebilirsiniz.
+              </h5>
+              <div class="mt-6 flex justify-end">
+                <button type="button" id="complete-photo-modal" class="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+                  Tamamla
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- End Fotoğraf Modalı -->
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Beden türü toggle
+      const sizeTypeRadios = document.querySelectorAll("input[name='size_type']");
+      const standardContainer = document.getElementById("standard-size-container");
+      const customContainer = document.getElementById("custom-size-container");
+
+      sizeTypeRadios.forEach(radio => {
+        radio.addEventListener("change", function() {
+          if (this.value === "standard") {
+            standardContainer.classList.remove("hidden");
+            customContainer.classList.add("hidden");
+          } else {
+            standardContainer.classList.add("hidden");
+            customContainer.classList.remove("hidden");
+          }
+        });
+      });
+
+      // Uyarı mesajı gösterme fonksiyonu
+      function showWarning(inputElement, message) {
+        let warning = document.createElement("span");
+        warning.className = "text-red-600 text-xs mt-1";
+        warning.innerText = message;
+        inputElement.parentNode.appendChild(warning);
+        setTimeout(() => {
+          warning.remove();
+        }, 2000);
+      }
+
+      // Ölçü alanları: sadece sayı ve nokta kontrolü
+      const measurementInputs = document.querySelectorAll("input[name='chest'], input[name='waist'], input[name='hip']");
+      measurementInputs.forEach(input => {
+        input.addEventListener("keypress", function(e) {
+          if (!/[0-9.]/.test(e.key)) {
+            e.preventDefault();
+            showWarning(input, "Sadece sayı girin");
+          }
+        });
+      });
+
+      // --- Fotoğraf Modal İşlemleri ---
+      const openPhotoModalBtn = document.getElementById("open-photo-modal");
+      const photoModal = document.getElementById("photo-modal");
+      const completePhotoModalBtn = document.getElementById("complete-photo-modal");
+      const photoThumbnails = document.getElementById("photo-thumbnails");
+
+      // uploadedPhotos dizisi, seçilen dosyaları tutar
+      const uploadedPhotos = new Array(6).fill(null);
+
+      // Grid hücreleri: Artı ikon tıklama ve drop olaylarını ekleyin
+      const photoGridCells = document.querySelectorAll("#photo-grid div");
+      photoGridCells.forEach(cell => {
+        // Tıklamayla dosya seçimi
+        const addIcon = cell.querySelector("span.add-photo");
+        const input = cell.querySelector(".photo-input");
+
+        addIcon.addEventListener("click", function() {
+          input.click();
+        });
+
+        // Drag & Drop desteği:
+        cell.addEventListener("dragover", function(e) {
+          e.preventDefault();
+          cell.classList.add("bg-gray-100");
+        });
+
+        cell.addEventListener("dragleave", function(e) {
+          cell.classList.remove("bg-gray-100");
+        });
+
+        cell.addEventListener("drop", function(e) {
+          e.preventDefault();
+          cell.classList.remove("bg-gray-100");
+          const dt = e.dataTransfer;
+          if (dt && dt.files && dt.files.length) {
+            // Eğer dosya düşürüldüyse, işlemi file input change gibi yapalım.
+            // Burada ilk dosyayı kullanıyoruz.
+            const file = dt.files[0];
+            // NOTE: file input'un value'si okunamaz, fakat burada uploadedPhotos ve preview'ı güncelliyoruz.
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function(event) {
+                let previewImg = cell.querySelector("img.preview");
+                if (!previewImg) {
+                  previewImg = document.createElement("img");
+                  previewImg.className = "preview object-cover h-full w-full absolute top-0 left-0 pointer-events-none";
+                  cell.appendChild(previewImg);
+                  // Gizle artı ikon
+                  let plus = cell.querySelector("span.add-photo");
+                  if (plus) plus.classList.add("hidden");
+                  // Silme butonu ekle
+                  let deleteBtn = cell.querySelector("button.delete-photo");
+                  if (!deleteBtn) {
+                    deleteBtn = document.createElement("button");
+                    deleteBtn.type = "button";
+                    deleteBtn.className = "delete-photo absolute top-1 right-1 bg-white bg-opacity-75 rounded-full p-1 text-red-600 hover:bg-red-600 hover:text-white transition";
+                    deleteBtn.innerHTML = "&times;";
+                    cell.appendChild(deleteBtn);
+                    deleteBtn.addEventListener("click", function() {
+                      input.value = "";
+                      uploadedPhotos[cell.dataset.index] = null;
+                      previewImg.remove();
+                      deleteBtn.remove();
+                      let plus = cell.querySelector("span.add-photo");
+                      if (plus) plus.classList.remove("hidden");
+                    });
+                  }
+                }
+                previewImg.src = event.target.result;
+                uploadedPhotos[cell.dataset.index] = file;
+              };
+              reader.readAsDataURL(file);
+            }
+          }
+        });
+
+        // Dosya input değişiminde
+        input.addEventListener("change", function(e) {
+          const index = this.dataset.index;
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              let previewImg = cell.querySelector("img.preview");
+              if (!previewImg) {
+                previewImg = document.createElement("img");
+                previewImg.className = "preview object-cover h-full w-full absolute top-0 left-0 pointer-events-none";
+                cell.appendChild(previewImg);
+                let plus = cell.querySelector("span.add-photo");
+                if (plus) plus.classList.add("hidden");
+                let deleteBtn = cell.querySelector("button.delete-photo");
+                if (!deleteBtn) {
+                  deleteBtn = document.createElement("button");
+                  deleteBtn.type = "button";
+                  deleteBtn.className = "delete-photo absolute top-1 right-1 bg-white bg-opacity-75 rounded-full p-1 text-red-600 hover:bg-red-600 hover:text-white transition";
+                  deleteBtn.innerHTML = "&times;";
+                  cell.appendChild(deleteBtn);
+                  deleteBtn.addEventListener("click", function() {
+                    input.value = "";
+                    uploadedPhotos[index] = null;
+                    previewImg.remove();
+                    deleteBtn.remove();
+                    let plus = cell.querySelector("span.add-photo");
+                    if (plus) plus.classList.remove("hidden");
+                  });
+                }
+              }
+              previewImg.src = event.target.result;
+              uploadedPhotos[index] = file;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        // Drag and drop (thumbnail alanı) ile yeniden sıralamayı ekleyelim
+        cell.setAttribute("draggable", "true");
+        cell.addEventListener("dragstart", function(e) {
+          e.dataTransfer.setData("text/plain", cell.dataset.index);
+          cell.classList.add("opacity-50");
+        });
+        cell.addEventListener("dragend", function(e) {
+          cell.classList.remove("opacity-50");
+        });
+      });
+
+      // Thumbnail alanında yeniden sıralama (basit sürükle bırak)
+      photoThumbnails.addEventListener("dragover", function(e) {
+        e.preventDefault();
+      });
+      photoThumbnails.addEventListener("drop", function(e) {
+        e.preventDefault();
+        const sourceIndex = e.dataTransfer.getData("text/plain");
+        const targetCell = e.target.closest("div.h-24");
+        if (!targetCell) return;
+        const targetIndex = targetCell.dataset.index;
+        // Basit sıralama: swap içeriğini
+        const sourceCell = document.querySelector(`div[data-index="${sourceIndex}"]`);
+        if (sourceCell && targetCell && sourceCell !== targetCell) {
+          // Swap the DOM nodes in the thumbnail container
+          const temp = document.createElement("div");
+          photoThumbnails.insertBefore(temp, sourceCell);
+          photoThumbnails.insertBefore(sourceCell, targetCell);
+          photoThumbnails.insertBefore(targetCell, temp);
+          photoThumbnails.removeChild(temp);
+          // Ayrıca, swap the uploadedPhotos array entries
+          const tempFile = uploadedPhotos[sourceIndex];
+          uploadedPhotos[sourceIndex] = uploadedPhotos[targetIndex];
+          uploadedPhotos[targetIndex] = tempFile;
+          // Güncelle: ilk thumbnail üzerine kapak etiketi ekle
+          updateCoverBadge();
+        }
+      });
+
+      // "Tamamla" butonuyla modalı kapat ve thumbnail alanını güncelle
+      completePhotoModalBtn.addEventListener("click", function() {
+        photoModal.classList.add("hidden");
+        photoThumbnails.innerHTML = "";
+        uploadedPhotos.forEach((file, idx) => {
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              const thumbDiv = document.createElement("div");
+              thumbDiv.className = "h-24 w-24 border border-gray-300 rounded overflow-hidden relative";
+              thumbDiv.dataset.index = idx;
+              thumbDiv.setAttribute("draggable", "true");
+              thumbDiv.innerHTML = `<img src="${event.target.result}" class="object-cover h-full w-full">`;
+              photoThumbnails.appendChild(thumbDiv);
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+        // After thumbnails are updated, add cover badge to the first thumbnail.
+        setTimeout(updateCoverBadge, 100);
+      });
+
+      function updateCoverBadge() {
+        const thumbnails = photoThumbnails.querySelectorAll("div.h-24");
+        thumbnails.forEach((thumb, idx) => {
+          let badge = thumb.querySelector("div.cover-badge");
+          if (badge) badge.remove();
+          if (idx === 0) {
+            badge = document.createElement("div");
+            badge.className = "cover-badge absolute bottom-1 left-1 bg-rose-600 text-white text-xs font-medium px-2 py-0.5 rounded-full shadow-md";
+            badge.innerText = "Kapak";
+            thumb.appendChild(badge);
+          }
+        });
+      }
+
+      // Fotoğraf modal açma
+      openPhotoModalBtn.addEventListener("click", function() {
+        photoModal.classList.remove("hidden");
+      });
+    });
+  </script>
+{% endblock %}

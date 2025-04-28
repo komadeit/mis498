@@ -12,25 +12,25 @@
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700">E-posta</label>
         <input id="email" name="email" type="email" required
-               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
                placeholder="E-posta adresiniz">
       </div>
       
       <!-- Şifre -->
       <div>
         <label for="password" class="block text-sm font-medium text-gray-700">Şifre</label>
-        <div class="relative">
+        <div class="relative mt-1">
           <input id="password" name="password" type="password" required
-                 class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500 pr-10 sm:text-sm"
                  placeholder="Şifreniz">
           <button type="button"
-                  data-hs-toggle-password='{"target": "#password"}'
-                  class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-500">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path class="hs-password-active:hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              <path class="hs-password-active:hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-              <path class="hidden hs-password-active:block" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-              <circle class="hidden hs-password-active:block" cx="12" cy="12" r="3"></circle>
+                  onclick="togglePassword('password')"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500 focus:outline-none">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path class="eye-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              <path class="eye-closed hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
             </svg>
           </button>
         </div>
@@ -39,7 +39,7 @@
       <!-- Giriş Butonu -->
       <div>
         <button type="submit"
-                class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors duration-200">
           Giriş Yap
         </button>
       </div>
@@ -48,30 +48,50 @@
     <!-- Kayıt Ol Linki -->
     <div class="text-center">
       <p class="text-sm text-gray-600">
-        Hesabınız yok mu? <a href="/signup" class="font-medium text-rose-600 hover:text-rose-500">Kayıt Olun</a>
+        Hesabınız yok mu? <a href="/signup" class="font-medium text-rose-600 hover:text-rose-500 transition-colors duration-200">Kayıt Olun</a>
       </p>
     </div>
   </div>
 </div>
 
-<!-- Flash Modal (Başarılı veya Hatalı Giriş) -->
-<div id="error-modal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-  <div class="bg-white p-6 rounded shadow-lg relative max-w-sm w-full">
-    {% if get_flashed_messages()[0] == "Giriş başarılı!" %}
-      <button type="button" class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none cursor-not-allowed" disabled>
-        <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
-      </button>
-    {% else %}
-      <button type="button" 
-              data-hs-toggle-modal="#error-modal"
-              class="absolute top-0 right-0 mt-2 mr-2 focus:outline-none">
-        <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
-      </button>
-    {% endif %}
-    <div class="text-center">
-      <p id="modal-message" class="text-lg">
-        {{ get_flashed_messages()[0] if get_flashed_messages() }}
-      </p>
+<!-- Enhanced Flash Modal -->
+<div id="flash-modal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity duration-300">
+  <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4 transform transition-all duration-300 scale-95 opacity-0">
+    <div class="relative">
+      {% if get_flashed_messages()[0] == "Giriş başarılı!" %}
+        <div class="text-center">
+          <!-- Success Icon -->
+          <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">Giriş Başarılı!</h3>
+          <p class="text-sm text-gray-500 mb-4">Ana sayfaya yönlendiriliyorsunuz...</p>
+          <!-- Enhanced Loading Spinner -->
+          <div class="flex justify-center items-center space-x-2">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
+          </div>
+        </div>
+      {% else %}
+        <button type="button" onclick="closeModal()" class="absolute top-0 right-0 p-2 rounded-full hover:bg-gray-100 transition-colors duration-200">
+          <svg class="h-6 w-6 text-gray-400 hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        <div class="text-center">
+          <!-- Error Icon -->
+          <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">Hata!</h3>
+          <p class="text-sm text-red-600">
+            {{ get_flashed_messages()[0] if get_flashed_messages() }}
+          </p>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -79,34 +99,69 @@
 
 {% block scripts %}
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  // Preline toggle initialize
-  HSStaticMethods.autoInit();
+document.addEventListener('DOMContentLoaded', function() {
+  // Şifre görünürlük kontrolü
+  window.togglePassword = function(inputId) {
+    const input = document.getElementById(inputId);
+    const button = input.nextElementSibling;
+    const eyeOpen = button.querySelector('.eye-open');
+    const eyeClosed = button.querySelector('.eye-closed');
 
-  // Flash Modal kontrolü
+    if (input.type === 'password') {
+      input.type = 'text';
+      eyeOpen.classList.add('hidden');
+      eyeClosed.classList.remove('hidden');
+    } else {
+      input.type = 'password';
+      eyeOpen.classList.remove('hidden');
+      eyeClosed.classList.add('hidden');
+    }
+  };
+
+  // Modal yönetimi
+  const flashModal = document.getElementById('flash-modal');
+  const modalContent = flashModal.querySelector('.bg-white');
   const messages = JSON.parse('{{ get_flashed_messages() | tojson | safe }}');
-  const errorModal = document.getElementById('error-modal');
-  const modalMessage = document.getElementById("modal-message");
+
+  window.closeModal = function() {
+    modalContent.classList.remove('scale-100', 'opacity-100');
+    modalContent.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      flashModal.classList.add('hidden');
+    }, 200);
+  };
 
   if (messages.length > 0) {
-    errorModal.classList.remove('hidden');
-    // Eğer mesaj "Giriş başarılı!" ise modal kapatma butonu devre dışı bırakıldı
+    flashModal.classList.remove('hidden');
+    // Trigger animation on next frame
+    requestAnimationFrame(() => {
+      modalContent.classList.remove('scale-95', 'opacity-0');
+      modalContent.classList.add('scale-100', 'opacity-100');
+    });
+
     if (messages[0] === "Giriş başarılı!") {
-      modalMessage.classList.remove("text-red-600");
-      modalMessage.classList.add("text-green-600");
       setTimeout(function() {
-        window.location.href = "/";
+        closeModal();
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 200);
       }, 2000);
     }
   }
 
-  // Sadece hata durumunda modal kapatma butonunu aktif ediyoruz.
-  const toggleModalBtn = document.querySelector('[data-hs-toggle-modal="#error-modal"]');
-  if (toggleModalBtn) {
-    toggleModalBtn.addEventListener('click', function() {
-      errorModal.classList.add('hidden');
-    });
-  }
+  // ESC tuşu ile modalı kapatma
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !flashModal.classList.contains('hidden') && messages[0] !== "Giriş başarılı!") {
+      closeModal();
+    }
+  });
+
+  // Modal dışına tıklama ile kapatma
+  flashModal.addEventListener('click', function(e) {
+    if (e.target === flashModal && messages[0] !== "Giriş başarılı!") {
+      closeModal();
+    }
+  });
 });
 </script>
 {% endblock %}
